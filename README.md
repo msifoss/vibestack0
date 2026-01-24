@@ -1,160 +1,156 @@
-# Vibe Coding Stack Installer
+================================================================================
+                 VIBE CODING STACK (Security Hardened)
+                           Version 3.0.0
+================================================================================
 
-A PowerShell script that installs and configures a complete development environment for all users on a Windows system.
+FIRST TIME SETUP (one-time, as Administrator):
+--------------------------------------------------------------------------------
 
-## What Gets Installed
+Set-ExecutionPolicy RemoteSigned -Scope LocalMachine
+Unblock-File .\VibeCodingStack.ps1
 
-### Core Stack
-| Software | Purpose |
-|----------|---------|
-| **Visual Studio Code** | Code editor with context menu integration |
-| **Git for Windows** | Version control + Git Bash terminal |
-| **Python 3.12** | Python runtime with pip |
-| **Node.js LTS** | JavaScript runtime (required for Claude Code) |
-| **Claude Code** | AI-powered coding assistant CLI |
+INSTALL:
+--------------------------------------------------------------------------------
 
-### Optional Tools
-| Software | Purpose |
-|----------|---------|
-| **Everything** (Void Tools) | Instant file search + CLI |
-| **IrfanView** | Fast image viewer with plugins |
+.\VibeCodingStack.ps1
 
-## Requirements
+UNINSTALL:
+--------------------------------------------------------------------------------
 
-- Windows 10 or Windows 11
-- Administrator privileges
-- Internet connection
-- Windows Package Manager (winget) - script will attempt to install if missing
+.\VibeCodingStack.ps1 -Uninstall
 
-## Usage
+PREVIEW (no changes):
+--------------------------------------------------------------------------------
 
-### Basic Installation
+.\VibeCodingStack.ps1 -WhatIf
+.\VibeCodingStack.ps1 -Uninstall -WhatIf
 
-1. **Open PowerShell as Administrator**
-   - Press `Win + X`
-   - Select "Terminal (Admin)" or "PowerShell (Admin)"
+================================================================================
 
-2. **Set execution policy** (if needed)
-   ```powershell
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-   ```
+WHAT GETS INSTALLED
+-------------------
 
-3. **Run the installer**
-   ```powershell
-   .\Install-VibeCodingStack.ps1
-   ```
+  Core:
+    - Visual Studio Code     (Microsoft.VisualStudioCode)
+    - Git for Windows        (Git.Git)
+    - Python 3.12            (Python.Python.3.12)
+    - Node.js LTS            (OpenJS.NodeJS.LTS)
+    - Claude Code            (@anthropic-ai/claude-code)
 
-### Command-Line Options
+  Optional:
+    - Everything Search      (voidtools.Everything)
+    - Everything CLI         (voidtools.Everything.Cli)
+    - IrfanView              (IrfanSkiljan.IrfanView)
+    - IrfanView Plugins      (IrfanSkiljan.IrfanView.PlugIns)
 
-```powershell
-# Install everything (default)
-.\Install-VibeCodingStack.ps1
 
-# Skip optional tools (Everything, IrfanView)
-.\Install-VibeCodingStack.ps1 -SkipOptional
+COMMAND-LINE OPTIONS
+--------------------
 
-# Force reinstall of all packages
-.\Install-VibeCodingStack.ps1 -Force
+  INSTALL OPTIONS:
+    -WhatIf          Preview without making changes
+    -Force           Skip confirmation prompt
+    -SkipOptional    Skip Everything and IrfanView
+    -LogPath <dir>   Custom audit log location
 
-# Combine options
-.\Install-VibeCodingStack.ps1 -SkipOptional -Force
-```
+  UNINSTALL OPTIONS:
+    -Uninstall       Switch to uninstall mode
+    -WhatIf          Preview without making changes
+    -Force           Skip confirmation (normally requires typing 'YES')
+    -SkipOptional    Keep Everything and IrfanView
+    -KeepPython      Keep Python installed
+    -KeepNodeJS      Keep Node.js and Claude Code installed
+    -KeepGit         Keep Git installed
+    -LogPath <dir>   Custom audit log location
 
-## Environment Variables Configured
 
-The script automatically sets up these environment variables:
+EXAMPLES
+--------
 
-| Variable | Value | Purpose |
-|----------|-------|---------|
-| `PATH` | Updated with all tool paths | Command-line access |
-| `EDITOR` | VS Code | Default editor for CLI tools |
-| `VISUAL` | VS Code | Visual editor for git, etc. |
-| `PYTHONHOME` | Python install directory | Python configuration |
-| `PYTHONUTF8` | `1` | Force UTF-8 encoding in Python |
-| `FORCE_COLOR` | `1` | Enable ANSI colors in terminals |
+  # Install everything
+  .\VibeCodingStack.ps1
 
-## Post-Installation
+  # Install core only, skip prompts
+  .\VibeCodingStack.ps1 -SkipOptional -Force
 
-After installation completes:
+  # Preview uninstall
+  .\VibeCodingStack.ps1 -Uninstall -WhatIf
 
-1. **Close and reopen** any terminal windows to load the new PATH
+  # Uninstall but keep Git and Python
+  .\VibeCodingStack.ps1 -Uninstall -KeepGit -KeepPython
 
-2. **Verify installations:**
-   ```powershell
-   code --version     # Visual Studio Code
-   git --version      # Git
-   python --version   # Python
-   node --version     # Node.js
-   npm --version      # npm
-   claude --version   # Claude Code
-   es -h              # Everything CLI (if installed)
-   ```
 
-3. **Authenticate Claude Code:**
-   ```powershell
-   claude
-   ```
-   Follow the prompts to connect your Anthropic API key.
+SECURITY FEATURES
+-----------------
 
-## Git Configuration
+  [+] Package Allowlist      Only approved packages can install
+  [+] Exact Matching         Uses --exact to prevent substitution attacks
+  [+] Official Source Only   Uses --source winget exclusively
+  [+] Audit Logging          Full transcript saved to timestamped log file
+  [+] Confirmation Required  Shows plan before making changes
+  [+] WhatIf Mode            Preview all changes safely
+  [+] Strict Mode            PowerShell strict mode enabled
 
-The script configures these Git defaults system-wide:
 
-- `core.autocrlf = true` - Handles line endings on Windows
-- `init.defaultBranch = main` - Uses 'main' as default branch
-- `core.editor = code --wait` - Uses VS Code as Git editor
+AUDIT LOGS
+----------
 
-## Troubleshooting
+Every run creates a log file:
 
-### "winget is not recognized"
-The script will attempt to install winget automatically. If it fails:
-1. Open Microsoft Store
-2. Search for "App Installer"
-3. Install/Update the app
-4. Re-run the script
+  Install:    VibeCodingStack_Install_YYYY-MM-DD_HHMMSS.log
+  Uninstall:  VibeCodingStack_Uninstall_YYYY-MM-DD_HHMMSS.log
 
-### "Access Denied" errors
-Ensure you're running PowerShell as Administrator (right-click → Run as Administrator)
+Location: Script directory, or %TEMP% if not writable.
 
-### Package installation fails
-Try running with the `-Force` flag:
-```powershell
-.\Install-VibeCodingStack.ps1 -Force
-```
 
-### PATH not updated
-Close all terminal windows and open a new one. If issues persist:
-```powershell
-# Manually refresh environment
-$env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
-```
+REQUIREMENTS
+------------
 
-### Claude Code not found after install
-The npm global path may need to be added manually:
-```powershell
-$env:Path += ";$env:ProgramData\npm"
-```
+  - Windows 10 or Windows 11
+  - Administrator privileges
+  - Internet connection
+  - winget (App Installer from Microsoft Store)
 
-## Customization
 
-To modify installed packages, edit the script and update the `Install-*` functions. Each uses winget package IDs which can be found at:
-- https://winget.run
-- Run `winget search <package-name>`
+POST-INSTALLATION
+-----------------
 
-## Uninstallation
+  1. Close and reopen all terminal windows
 
-To remove installed packages:
-```powershell
-winget uninstall Microsoft.VisualStudioCode
-winget uninstall Git.Git
-winget uninstall Python.Python.3.12
-winget uninstall OpenJS.NodeJS.LTS
-winget uninstall voidtools.Everything
-winget uninstall IrfanSkiljan.IrfanView
+  2. Verify:
+     code --version
+     git --version
+     python --version
+     node --version
+     claude --version
 
-npm uninstall -g @anthropic-ai/claude-code
-```
+  3. Authenticate Claude Code:
+     claude
 
-## License
 
-MIT - Feel free to modify and distribute.
+TROUBLESHOOTING
+---------------
+
+  "File cannot be loaded. The file is not digitally signed."
+    Run: Unblock-File .\VibeCodingStack.ps1
+    Or right-click file -> Properties -> check "Unblock" -> OK
+
+  "winget is not recognized"
+    Install "App Installer" from Microsoft Store.
+
+  "Access Denied"
+    Right-click PowerShell -> Run as Administrator
+
+  PATH not updated
+    Close ALL terminal windows and reopen.
+
+  Claude Code not found
+    Add npm to PATH: $env:Path += ";$env:APPDATA\npm"
+
+
+VERIFYING SCRIPT INTEGRITY
+--------------------------
+
+  Get-FileHash .\VibeCodingStack.ps1 -Algorithm SHA256
+
+================================================================================
