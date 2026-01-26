@@ -184,39 +184,72 @@ check_prerequisites() {
     fi
     write_success "Homebrew available"
     
-    # Upgrade Homebrew itself first (critical for macOS version support)
-    write_step "Upgrading Homebrew..."
+    # Self-healing Homebrew upgrade
+    # An outdated Homebrew won't recognize newer macOS versions (e.g. Sequoia)
+    # or modern formula syntax (e.g. no_autobump!). We must upgrade the
+    # Homebrew binary itself, not just the formula index.
+    write_step "Checking Homebrew version..."
     if [[ "$WHATIF" == false ]]; then
-        # Homebrew must be current to know about newer macOS versions (e.g. Sequoia)
-        # and to parse modern formula syntax (e.g. no_autobump!)
-        local brew_upgrade_ok=false
+        local brew_ok=false
 
-        # Try: update formula index + upgrade Homebrew binary
+        # Step 1: Try normal update (fetches latest formula index)
+        write_step "Updating Homebrew formula index..."
         local update_output
-        if update_output=$(brew update 2>&1); then
-            brew_upgrade_ok=true
+        if update_output=$(brew update --force 2>&1); then
             write_step "$(echo "$update_output" | tail -3)"
         else
-            write_warn "brew update exit code: $?"
+            write_warn "brew update failed (exit $?), will attempt deeper fix..."
         fi
 
-        # If update alone didn't work, force a full reinstall of Homebrew
-        if [[ "$brew_upgrade_ok" == false ]]; then
-            write_warn "brew update failed, attempting full Homebrew upgrade..."
+        # Step 2: Upgrade Homebrew itself + all core packages
+        # This is the key fix — 'brew update' only updates the formula index,
+        # but 'brew upgrade' upgrades the actual Homebrew binary/ruby framework
+        write_step "Upgrading Homebrew binary and core..."
+        local upgrade_output
+        if upgrade_output=$(brew upgrade 2>&1); then
+            brew_ok=true
+            write_success "Homebrew upgraded"
+        else
+            write_warn "brew upgrade had issues: $(echo "$upgrade_output" | tail -3)"
+        fi
+
+        # Step 3: If still broken, reinstall Homebrew from scratch
+        if [[ "$brew_ok" == false ]]; then
+            write_warn "Homebrew may be too outdated. Reinstalling from scratch..."
             if /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" 2>&1; then
-                brew_upgrade_ok=true
+                # Re-add to PATH for Apple Silicon
+                if [[ -f "/opt/homebrew/bin/brew" ]]; then
+                    eval "$(/opt/homebrew/bin/brew shellenv)"
+                fi
+                brew update --force 2>&1 || true
+                brew_ok=true
+                write_success "Homebrew reinstalled"
+            else
+                write_err "Homebrew reinstall failed"
             fi
         fi
 
-        if [[ "$brew_upgrade_ok" == false ]]; then
-            write_err "Homebrew update/upgrade failed. Formulae may not install correctly."
-            write_warn "Try manually: brew update && brew upgrade"
-            write_warn "Continuing anyway..."
-        else
-            write_success "Homebrew updated"
+        # Step 4: Verify Homebrew can resolve the current macOS version
+        local test_output
+        if test_output=$(brew config 2>&1); then
+            local macos_line
+            macos_line=$(echo "$test_output" | grep -i "macOS:" || true)
+            if echo "$macos_line" | grep -qi "unsupported\|unknown"; then
+                write_err "Homebrew still does not recognize this macOS version"
+                write_err "$macos_line"
+                write_warn "Try manually: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+                write_warn "Continuing, but formula installs may fail..."
+            else
+                write_success "Homebrew recognizes macOS: $macos_line"
+            fi
         fi
+
+        if [[ "$brew_ok" == true ]]; then
+            write_success "Homebrew ready"
+        fi
+    else
+        write_warn "WHATIF: Would update and upgrade Homebrew"
     fi
-    write_success "Homebrew ready"
 
     return 0
 }
