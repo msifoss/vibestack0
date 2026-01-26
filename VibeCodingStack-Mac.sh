@@ -156,14 +156,36 @@ npm_package_installed() {
 
 check_prerequisites() {
     write_header "Checking Prerequisites"
-    
+
     # Check macOS
     if [[ "$(uname)" != "Darwin" ]]; then
         write_err "This script requires macOS"
         return 1
     fi
     write_success "macOS $(sw_vers -productVersion)"
-    
+
+    # Fix git SSH override for GitHub
+    # If git is configured to rewrite HTTPS URLs to SSH, Homebrew install
+    # and brew update will fail with "Permission denied (publickey)" because
+    # they expect anonymous HTTPS access to github.com.
+    if command_exists git; then
+        local ssh_override
+        ssh_override=$(git config --global --get-all url."git@github.com:".insteadOf 2>/dev/null || true)
+        local ssh_override2
+        ssh_override2=$(git config --global --get-all url."ssh://git@github.com/".insteadOf 2>/dev/null || true)
+
+        if [[ -n "$ssh_override" || -n "$ssh_override2" ]]; then
+            write_warn "Git is configured to force SSH for GitHub (blocks Homebrew)"
+            if [[ "$WHATIF" == true ]]; then
+                write_warn "WHATIF: Would remove git SSH-over-HTTPS overrides"
+            else
+                git config --global --unset-all url."git@github.com:".insteadOf 2>/dev/null || true
+                git config --global --unset-all url."ssh://git@github.com/".insteadOf 2>/dev/null || true
+                write_success "Removed git SSH-over-HTTPS overrides for GitHub"
+            fi
+        fi
+    fi
+
     # Check/Install Homebrew
     if ! command_exists brew; then
         write_warn "Homebrew not found. Installing..."
