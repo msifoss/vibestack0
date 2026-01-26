@@ -184,16 +184,40 @@ check_prerequisites() {
     fi
     write_success "Homebrew available"
     
-    # Update Homebrew (non-fatal - often has noisy errors)
-    write_step "Updating Homebrew..."
+    # Upgrade Homebrew itself first (critical for macOS version support)
+    write_step "Upgrading Homebrew..."
     if [[ "$WHATIF" == false ]]; then
-        # Suppress errors - brew update often has non-critical failures
-        brew update 2>/dev/null || {
-            write_warn "Homebrew update had issues (non-fatal, continuing...)"
-        }
+        # Homebrew must be current to know about newer macOS versions (e.g. Sequoia)
+        # and to parse modern formula syntax (e.g. no_autobump!)
+        local brew_upgrade_ok=false
+
+        # Try: update formula index + upgrade Homebrew binary
+        local update_output
+        if update_output=$(brew update 2>&1); then
+            brew_upgrade_ok=true
+            write_step "$(echo "$update_output" | tail -3)"
+        else
+            write_warn "brew update exit code: $?"
+        fi
+
+        # If update alone didn't work, force a full reinstall of Homebrew
+        if [[ "$brew_upgrade_ok" == false ]]; then
+            write_warn "brew update failed, attempting full Homebrew upgrade..."
+            if /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" 2>&1; then
+                brew_upgrade_ok=true
+            fi
+        fi
+
+        if [[ "$brew_upgrade_ok" == false ]]; then
+            write_err "Homebrew update/upgrade failed. Formulae may not install correctly."
+            write_warn "Try manually: brew update && brew upgrade"
+            write_warn "Continuing anyway..."
+        else
+            write_success "Homebrew updated"
+        fi
     fi
     write_success "Homebrew ready"
-    
+
     return 0
 }
 
