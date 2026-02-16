@@ -21,7 +21,7 @@ VERSION="3.0.0"
 SCRIPT_NAME="VibeCodingStack"
 
 # Core packages (Homebrew)
-declare -a CORE_FORMULAE=("git" "python@3.12" "node@22")
+declare -a CORE_FORMULAE=("git" "gh" "python@3.12" "node@22")
 declare -a CORE_CASKS=("visual-studio-code")
 
 # Optional packages (Mac alternatives to Windows tools)
@@ -571,7 +571,9 @@ show_plan() {
     else
         echo "    - Git"
     fi
-    
+
+    echo "    - GitHub CLI (gh)"
+
     if [[ "$UNINSTALL" == true && "$KEEP_PYTHON" == true ]]; then
         echo -e "${GRAY}    - Python 3.12 [KEEPING]${NC}"
     else
@@ -665,7 +667,7 @@ show_summary() {
         if [[ "$UNINSTALL" == false ]]; then
             echo ""
             echo -e "${CYAN}Verify:${NC}"
-            echo "  code --version && git --version && python3 --version && node --version && claude --version"
+            echo "  code --version && git --version && gh --version && python3 --version && node --version && claude --version"
         fi
     fi
     
@@ -685,6 +687,7 @@ do_install() {
     
     # Formulae
     install_formula "git" "Git" || true
+    install_formula "gh" "GitHub CLI" || true
     install_formula "python@3.12" "Python 3.12" || true
     install_formula "node@22" "Node.js LTS" || true
     
@@ -739,6 +742,8 @@ do_uninstall() {
         uninstall_formula "python@3.12" "Python 3.12" || true
     fi
     
+    uninstall_formula "gh" "GitHub CLI" || true
+
     if [[ "$KEEP_GIT" == true ]]; then
         write_warn "Keeping Git"
         SKIPPED+=("Git")
@@ -780,6 +785,7 @@ PACKAGES:
     Core:
       - Visual Studio Code
       - Git
+      - GitHub CLI (gh)
       - Python 3.12
       - Node.js LTS
       - Claude Code
