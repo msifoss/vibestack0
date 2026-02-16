@@ -28,6 +28,9 @@ declare -a CORE_CASKS=("visual-studio-code")
 declare -a OPTIONAL_FORMULAE=("fd")  # Fast file finder (Everything alternative)
 declare -a OPTIONAL_CASKS=("imageoptim")  # Image optimizer (IrfanView alternative)
 
+# Phase 2: Recommended extras (prompted after core install)
+declare -a PHASE2_FORMULAE=("jq" "tree" "ripgrep" "fzf" "httpie")
+
 # Claude Code npm package
 CLAUDE_CODE_PACKAGE="@anthropic-ai/claude-code"
 
@@ -36,6 +39,7 @@ UNINSTALL=false
 WHATIF=false
 FORCE=false
 SKIP_OPTIONAL=false
+SKIP_EXTRAS=false
 KEEP_PYTHON=false
 KEEP_NODE=false
 KEEP_GIT=false
@@ -370,6 +374,46 @@ install_claude_code() {
     fi
 }
 
+install_phase2() {
+    if [[ "$SKIP_EXTRAS" == true ]]; then
+        write_warn "Skipping recommended extras (--skip-extras)"
+        return 0
+    fi
+
+    write_header "Recommended Extras"
+
+    echo -e "${CYAN}The following developer productivity tools are available:${NC}"
+    echo ""
+    echo "    - jq        — JSON processor"
+    echo "    - tree      — directory visualization"
+    echo "    - ripgrep   — fast code search (rg)"
+    echo "    - fzf       — fuzzy finder"
+    echo "    - httpie    — human-friendly HTTP client"
+    echo ""
+
+    if [[ "$WHATIF" == true ]]; then
+        write_warn "WHATIF: Would prompt to install recommended extras"
+        return 0
+    fi
+
+    if [[ "$FORCE" == true ]]; then
+        write_step "Installing recommended extras (--force)"
+    else
+        echo -n "Install recommended extras? (Y/N): "
+        read -r response
+        if [[ ! "$response" =~ ^[Yy] ]]; then
+            write_warn "Skipping recommended extras"
+            return 0
+        fi
+    fi
+
+    install_formula "jq" "jq (JSON processor)" || true
+    install_formula "tree" "tree (directory visualization)" || true
+    install_formula "ripgrep" "ripgrep (fast code search)" || true
+    install_formula "fzf" "fzf (fuzzy finder)" || true
+    install_formula "httpie" "httpie (HTTP client)" || true
+}
+
 # =============================================================================
 # Uninstall Functions
 # =============================================================================
@@ -475,6 +519,15 @@ uninstall_claude_code() {
         FAILED+=("Claude Code")
         return 1
     fi
+}
+
+uninstall_phase2() {
+    write_header "Uninstalling Recommended Extras"
+    uninstall_formula "jq" "jq (JSON processor)" || true
+    uninstall_formula "tree" "tree (directory visualization)" || true
+    uninstall_formula "ripgrep" "ripgrep (fast code search)" || true
+    uninstall_formula "fzf" "fzf (fuzzy finder)" || true
+    uninstall_formula "httpie" "httpie (HTTP client)" || true
 }
 
 # =============================================================================
@@ -597,6 +650,16 @@ show_plan() {
         echo "    - ImageOptim (image optimizer - IrfanView alternative)"
     fi
     
+    if [[ "$SKIP_EXTRAS" == false ]]; then
+        echo ""
+        echo -e "${YELLOW}  Recommended Extras (prompted after core install):${NC}"
+        echo "    - jq (JSON processor)"
+        echo "    - tree (directory visualization)"
+        echo "    - ripgrep (fast code search)"
+        echo "    - fzf (fuzzy finder)"
+        echo "    - httpie (HTTP client)"
+    fi
+
     echo ""
     echo -e "${YELLOW}  Note: Windows-only tools not available:${NC}"
     echo -e "${GRAY}    - Everything (Void Tools) - use 'fd' or Spotlight instead${NC}"
@@ -704,7 +767,10 @@ do_install() {
     
     # Claude Code
     install_claude_code || true
-    
+
+    # Recommended extras
+    install_phase2 || true
+
     # Configure
     configure_environment || true
 }
@@ -724,7 +790,10 @@ do_uninstall() {
         uninstall_cask "imageoptim" "ImageOptim" || true
         uninstall_formula "fd" "fd (file finder)" || true
     fi
-    
+
+    # Recommended extras
+    uninstall_phase2 || true
+
     # Core
     write_header "Uninstalling Core Packages"
     
@@ -772,6 +841,7 @@ OPTIONS:
     --whatif         Preview changes without executing
     --force          Skip confirmation prompts
     --skip-optional  Skip optional packages (fd, ImageOptim)
+    --skip-extras    Skip recommended extras prompt (jq, tree, ripgrep, fzf, httpie)
     --keep-git       (Uninstall) Keep Git installed
     --keep-python    (Uninstall) Keep Python installed
     --keep-node      (Uninstall) Keep Node.js and Claude Code installed
@@ -798,6 +868,13 @@ PACKAGES:
       - fd (fast file finder - replaces Everything)
       - ImageOptim (image optimizer - replaces IrfanView)
 
+    Recommended Extras (prompted after core install):
+      - jq (JSON processor)
+      - tree (directory visualization)
+      - ripgrep (fast code search)
+      - fzf (fuzzy finder)
+      - httpie (HTTP client)
+
 EOF
     exit 0
 }
@@ -823,6 +900,10 @@ parse_args() {
                 ;;
             --skip-optional)
                 SKIP_OPTIONAL=true
+                shift
+                ;;
+            --skip-extras)
+                SKIP_EXTRAS=true
                 shift
                 ;;
             --keep-git)
