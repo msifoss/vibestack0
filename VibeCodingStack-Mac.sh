@@ -21,7 +21,7 @@ VERSION="3.0.0"
 SCRIPT_NAME="VibeCodingStack"
 
 # Core packages (Homebrew)
-declare -a CORE_FORMULAE=("git" "gh" "python@3.12" "node@22")
+declare -a CORE_FORMULAE=("git" "gh" "wget" "python@3.12" "node@22")
 declare -a CORE_CASKS=("visual-studio-code")
 
 # Optional packages (Mac alternatives to Windows tools)
@@ -573,6 +573,7 @@ show_plan() {
     fi
 
     echo "    - GitHub CLI (gh)"
+    echo "    - wget"
 
     if [[ "$UNINSTALL" == true && "$KEEP_PYTHON" == true ]]; then
         echo -e "${GRAY}    - Python 3.12 [KEEPING]${NC}"
@@ -667,7 +668,7 @@ show_summary() {
         if [[ "$UNINSTALL" == false ]]; then
             echo ""
             echo -e "${CYAN}Verify:${NC}"
-            echo "  code --version && git --version && gh --version && python3 --version && node --version && claude --version"
+            echo "  code --version && git --version && gh --version && wget --version && python3 --version && node --version && claude --version"
         fi
     fi
     
@@ -688,6 +689,7 @@ do_install() {
     # Formulae
     install_formula "git" "Git" || true
     install_formula "gh" "GitHub CLI" || true
+    install_formula "wget" "wget" || true
     install_formula "python@3.12" "Python 3.12" || true
     install_formula "node@22" "Node.js LTS" || true
     
@@ -743,6 +745,7 @@ do_uninstall() {
     fi
     
     uninstall_formula "gh" "GitHub CLI" || true
+    uninstall_formula "wget" "wget" || true
 
     if [[ "$KEEP_GIT" == true ]]; then
         write_warn "Keeping Git"
@@ -786,6 +789,7 @@ PACKAGES:
       - Visual Studio Code
       - Git
       - GitHub CLI (gh)
+      - wget
       - Python 3.12
       - Node.js LTS
       - Claude Code
