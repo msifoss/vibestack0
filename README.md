@@ -32,6 +32,8 @@ WHAT GETS INSTALLED
   Core (both platforms):
     - Visual Studio Code
     - Git
+    - GitHub CLI (gh)
+    - wget
     - Python 3.12
     - Node.js LTS
     - Claude Code (@anthropic-ai/claude-code)
@@ -46,6 +48,13 @@ WHAT GETS INSTALLED
     - fd                     (fast file finder - Everything alternative)
     - ImageOptim             (image optimizer - IrfanView alternative)
 
+  Recommended Extras - macOS (prompted after core install):
+    - jq                     (JSON processor)
+    - tree                   (directory visualization)
+    - ripgrep                (fast code search)
+    - fzf                    (fuzzy finder)
+    - httpie                 (human-friendly HTTP client)
+
   Windows-only (no Mac equivalent):
     - Everything (Void Tools) - use Spotlight, fd, or Alfred on Mac
     - IrfanView - use Preview, ImageOptim, or Pixelmator on Mac
@@ -59,6 +68,7 @@ COMMAND-LINE OPTIONS
   -WhatIf                               --whatif
   -Force                                --force
   -SkipOptional                         --skip-optional
+  (n/a)                                 --skip-extras
   -Uninstall                            --uninstall
   -KeepPython                           --keep-python
   -KeepNodeJS                           --keep-node
@@ -78,6 +88,7 @@ EXAMPLES
   macOS:
     ./VibeCodingStack.sh                               # Install all
     ./VibeCodingStack.sh --skip-optional --force       # Core only, no prompts
+    ./VibeCodingStack.sh --skip-extras                 # Install without extras prompt
     ./VibeCodingStack.sh --uninstall --whatif          # Preview uninstall
     ./VibeCodingStack.sh --uninstall --keep-git        # Uninstall, keep Git
 
