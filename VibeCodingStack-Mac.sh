@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # VibeCodingStack.sh - Install/Uninstall Vibe Coding Stack for macOS
-# Version: 3.0.0
+# Version: 3.1.0
 #
 # Usage:
 #   ./VibeCodingStack.sh              # Install
@@ -17,7 +17,7 @@ set -uo pipefail
 # Configuration
 # =============================================================================
 
-VERSION="3.0.0"
+VERSION="3.1.0"
 SCRIPT_NAME="VibeCodingStack"
 
 # Core packages (Homebrew)
