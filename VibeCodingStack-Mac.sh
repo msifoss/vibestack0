@@ -755,7 +755,17 @@ do_install() {
     install_formula "wget" "wget" || true
     install_formula "python@3.12" "Python 3.12" || true
     install_formula "node@22" "Node.js LTS" || true
-    
+
+    # Ensure Node/npm are on PATH immediately (keg-only formula)
+    if [[ "$WHATIF" == false ]]; then
+        local node_bin="/opt/homebrew/opt/node@22/bin"
+        [[ ! -d "$node_bin" ]] && node_bin="/usr/local/opt/node@22/bin"
+        if [[ -d "$node_bin" ]] && ! echo "$PATH" | grep -q "$node_bin"; then
+            export PATH="$node_bin:$PATH"
+            write_success "Added Node.js to PATH for this session"
+        fi
+    fi
+
     # Optional
     if [[ "$SKIP_OPTIONAL" == false ]]; then
         write_header "Installing Optional Packages"
