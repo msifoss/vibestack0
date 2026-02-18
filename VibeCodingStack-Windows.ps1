@@ -332,10 +332,10 @@ function Invoke-WingetInstall {
         return $true
     }
     
-    $cmd = "winget install --exact --id $PackageId --source winget --scope machine --accept-source-agreements --accept-package-agreements --silent"
-    Write-AuditEvent "COMMAND" $cmd
-    
-    $result = Start-Process -FilePath "cmd.exe" -ArgumentList "/c", $cmd -Wait -PassThru -NoNewWindow
+    $wingetArgs = @("install", "--exact", "--id", $PackageId, "--source", "winget", "--scope", "machine", "--accept-source-agreements", "--accept-package-agreements", "--silent")
+    Write-AuditEvent "COMMAND" "winget $($wingetArgs -join ' ')"
+
+    $result = Start-Process -FilePath "winget" -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
     
     if ($result.ExitCode -eq 0) {
         Write-Success "$DisplayName installed"
@@ -370,10 +370,10 @@ function Invoke-WingetUninstall {
         return $true
     }
     
-    $cmd = "winget uninstall --exact --id $PackageId --source winget --silent --accept-source-agreements"
-    Write-AuditEvent "COMMAND" $cmd
-    
-    $result = Start-Process -FilePath "cmd.exe" -ArgumentList "/c", $cmd -Wait -PassThru -NoNewWindow
+    $wingetArgs = @("uninstall", "--exact", "--id", $PackageId, "--source", "winget", "--silent", "--accept-source-agreements")
+    Write-AuditEvent "COMMAND" "winget $($wingetArgs -join ' ')"
+
+    $result = Start-Process -FilePath "winget" -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
     
     if ($result.ExitCode -eq 0) {
         Write-Success "$DisplayName uninstalled"
