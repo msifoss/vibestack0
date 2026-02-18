@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # VibeCodingStack.sh - Install/Uninstall Vibe Coding Stack for macOS
-# Version: 3.1.0
+# Version: 3.2.0-secure
 #
 # Usage:
 #   ./VibeCodingStack.sh              # Install
@@ -17,22 +17,12 @@ set -uo pipefail
 # Configuration
 # =============================================================================
 
-VERSION="3.1.0"
+VERSION="3.2.0-secure"
 SCRIPT_NAME="VibeCodingStack"
-
-# Core packages (Homebrew)
-declare -a CORE_FORMULAE=("git" "gh" "wget" "python@3.12" "node@22")
-declare -a CORE_CASKS=("visual-studio-code")
-
-# Optional packages (Mac alternatives to Windows tools)
-declare -a OPTIONAL_FORMULAE=("fd")  # Fast file finder (Everything alternative)
-declare -a OPTIONAL_CASKS=("imageoptim")  # Image optimizer (IrfanView alternative)
-
-# Phase 2: Recommended extras (prompted after core install)
-declare -a PHASE2_FORMULAE=("jq" "tree" "ripgrep" "fzf" "httpie")
 
 # Claude Code npm package
 CLAUDE_CODE_PACKAGE="@anthropic-ai/claude-code"
+CLAUDE_CODE_VERSION=""  # Pin to a specific version (e.g. "1.0.0"), empty = latest
 
 # Flags
 UNINSTALL=false
@@ -69,25 +59,34 @@ start_audit_log() {
     local timestamp=$(date +"%Y-%m-%d_%H%M%S")
     local mode="Install"
     [[ "$UNINSTALL" == true ]] && mode="Uninstall"
-    
+
     LOG_FILE="${SCRIPT_NAME}_${mode}_${timestamp}.log"
-    
+
+    # Path validation — reject traversal sequences
+    if [[ "$LOG_FILE" == *"//"* || "$LOG_FILE" == *"../"* || "$LOG_FILE" == *"/../"* ]]; then
+        echo "ERROR: Invalid log file path: ${LOG_FILE}" >&2
+        exit 1
+    fi
+
+    touch "$LOG_FILE"
+    chmod 600 "$LOG_FILE"
+
     exec > >(tee -a "$LOG_FILE") 2>&1
-    
+
     local color="$CYAN"
     local mode_text="INSTALLER"
     if [[ "$UNINSTALL" == true ]]; then
         color="$BLUE"
         mode_text="UNINSTALLER"
     fi
-    
+
     echo ""
     echo -e "${color}======================================================================${NC}"
     echo -e "${color}  VIBE CODING STACK ${mode_text} (macOS)${NC}"
     echo -e "${color}  Version: ${VERSION}${NC}"
     echo -e "${color}======================================================================${NC}"
     echo ""
-    
+
     log_event "START" "${mode} initiated by $(whoami) on $(hostname)"
 }
 
@@ -106,7 +105,7 @@ write_header() {
     local message="$1"
     local color="$MAGENTA"
     [[ "$UNINSTALL" == true ]] && color="$BLUE"
-    
+
     echo ""
     echo -e "${color}============================================================${NC}"
     echo -e "${color}  ${message}${NC}"
@@ -193,15 +192,15 @@ check_prerequisites() {
     # Check/Install Homebrew
     if ! command_exists brew; then
         write_warn "Homebrew not found. Installing..."
-        
+
         if [[ "$WHATIF" == true ]]; then
             write_warn "WHATIF: Would install Homebrew"
         else
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
+            /bin/bash -c "$(curl -fsSL --tlsv1.2 https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
                 write_err "Failed to install Homebrew"
                 return 1
             }
-            
+
             # Add to PATH for Apple Silicon
             if [[ -f "/opt/homebrew/bin/brew" ]]; then
                 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -209,7 +208,7 @@ check_prerequisites() {
         fi
     fi
     write_success "Homebrew available"
-    
+
     # Self-healing Homebrew upgrade
     # An outdated Homebrew won't recognize newer macOS versions (e.g. Sequoia)
     # or modern formula syntax (e.g. no_autobump!). We must upgrade the
@@ -244,7 +243,7 @@ check_prerequisites() {
             # macOS not recognized — need a full Homebrew reinstall
             write_warn "Homebrew does not recognize this macOS version: $macos_check"
             write_step "Reinstalling Homebrew from scratch (output streamed live)..."
-            if /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" 2>&1; then
+            if /bin/bash -c "$(curl -fsSL --tlsv1.2 https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" 2>&1; then
                 # Re-add to PATH for Apple Silicon
                 if [[ -f "/opt/homebrew/bin/brew" ]]; then
                     eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -265,7 +264,7 @@ check_prerequisites() {
             write_success "Homebrew ready"
         else
             write_warn "Homebrew may not work correctly. Continuing anyway..."
-            write_warn "Try manually: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+            write_warn "Try manually: /bin/bash -c \"\$(curl -fsSL --tlsv1.2 https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
         fi
     else
         write_warn "WHATIF: Would update and upgrade Homebrew"
@@ -281,23 +280,23 @@ check_prerequisites() {
 install_formula() {
     local formula="$1"
     local display_name="$2"
-    
+
     write_step "Installing ${display_name}..."
-    
+
     if brew_formula_installed "$formula"; then
         write_success "${display_name} already installed"
         SKIPPED+=("$display_name")
         return 0
     fi
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF: Would install ${display_name}"
         SKIPPED+=("$display_name")
         return 0
     fi
-    
+
     log_event "COMMAND" "brew install ${formula}"
-    
+
     # Capture output, suppress noise
     local output
     if output=$(brew install "$formula" 2>&1); then
@@ -314,23 +313,23 @@ install_formula() {
 install_cask() {
     local cask="$1"
     local display_name="$2"
-    
+
     write_step "Installing ${display_name}..."
-    
+
     if brew_cask_installed "$cask"; then
         write_success "${display_name} already installed"
         SKIPPED+=("$display_name")
         return 0
     fi
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF: Would install ${display_name}"
         SKIPPED+=("$display_name")
         return 0
     fi
-    
+
     log_event "COMMAND" "brew install --cask ${cask}"
-    
+
     # Capture output, suppress noise
     local output
     if output=$(brew install --cask "$cask" 2>&1); then
@@ -346,24 +345,31 @@ install_cask() {
 
 install_claude_code() {
     write_header "Installing Claude Code CLI"
-    
+
     if ! command_exists npm; then
         write_err "npm not available. Install Node.js first."
         FAILED+=("Claude Code")
         return 1
     fi
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF: Would install Claude Code"
         SKIPPED+=("Claude Code")
         return 0
     fi
-    
-    write_step "Installing Claude Code via npm..."
-    log_event "COMMAND" "npm install -g ${CLAUDE_CODE_PACKAGE}"
-    
+
+    local install_target="$CLAUDE_CODE_PACKAGE"
+    if [[ -n "$CLAUDE_CODE_VERSION" ]]; then
+        install_target="${CLAUDE_CODE_PACKAGE}@${CLAUDE_CODE_VERSION}"
+        write_step "Installing Claude Code v${CLAUDE_CODE_VERSION} via npm..."
+    else
+        write_warn "CLAUDE_CODE_VERSION is not pinned — installing latest. Pin a version for reproducible builds."
+        write_step "Installing Claude Code (latest) via npm..."
+    fi
+    log_event "COMMAND" "npm install -g ${install_target}"
+
     local output
-    if output=$(npm install -g "$CLAUDE_CODE_PACKAGE" 2>&1); then
+    if output=$(npm install -g "$install_target" 2>&1); then
         write_success "Claude Code installed"
         SUCCESSFUL+=("Claude Code")
         return 0
@@ -421,25 +427,25 @@ install_phase2() {
 uninstall_formula() {
     local formula="$1"
     local display_name="$2"
-    
+
     write_step "Checking ${display_name}..."
-    
+
     if ! brew_formula_installed "$formula"; then
         write_warn "${display_name} not installed"
         NOT_FOUND+=("$display_name")
         return 0
     fi
-    
+
     write_step "Uninstalling ${display_name}..."
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF: Would uninstall ${display_name}"
         SKIPPED+=("$display_name")
         return 0
     fi
-    
+
     log_event "COMMAND" "brew uninstall ${formula}"
-    
+
     local output
     if output=$(brew uninstall "$formula" 2>&1); then
         write_success "${display_name} uninstalled"
@@ -455,25 +461,25 @@ uninstall_formula() {
 uninstall_cask() {
     local cask="$1"
     local display_name="$2"
-    
+
     write_step "Checking ${display_name}..."
-    
+
     if ! brew_cask_installed "$cask"; then
         write_warn "${display_name} not installed"
         NOT_FOUND+=("$display_name")
         return 0
     fi
-    
+
     write_step "Uninstalling ${display_name}..."
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF: Would uninstall ${display_name}"
         SKIPPED+=("$display_name")
         return 0
     fi
-    
+
     log_event "COMMAND" "brew uninstall --cask ${cask}"
-    
+
     local output
     if output=$(brew uninstall --cask "$cask" 2>&1); then
         write_success "${display_name} uninstalled"
@@ -488,28 +494,28 @@ uninstall_cask() {
 
 uninstall_claude_code() {
     write_header "Uninstalling Claude Code CLI"
-    
+
     if ! command_exists npm; then
         write_warn "npm not available - skipping Claude Code"
         SKIPPED+=("Claude Code")
         return 0
     fi
-    
+
     if ! npm_package_installed "$CLAUDE_CODE_PACKAGE"; then
         write_warn "Claude Code not installed"
         NOT_FOUND+=("Claude Code")
         return 0
     fi
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF: Would uninstall Claude Code"
         SKIPPED+=("Claude Code")
         return 0
     fi
-    
+
     write_step "Uninstalling Claude Code..."
     log_event "COMMAND" "npm uninstall -g ${CLAUDE_CODE_PACKAGE}"
-    
+
     if npm uninstall -g "$CLAUDE_CODE_PACKAGE" 2>&1; then
         write_success "Claude Code uninstalled"
         SUCCESSFUL+=("Claude Code")
@@ -536,12 +542,12 @@ uninstall_phase2() {
 
 configure_environment() {
     write_header "Configuring Environment"
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF: Would configure shell environment"
         return 0
     fi
-    
+
     # Detect shell
     local shell_rc=""
     case "$SHELL" in
@@ -549,12 +555,12 @@ configure_environment() {
         */bash) shell_rc="$HOME/.bash_profile" ;;
         *)      shell_rc="$HOME/.profile" ;;
     esac
-    
+
     write_step "Configuring ${shell_rc}..."
-    
+
     # Create file if it doesn't exist
     touch "$shell_rc" 2>/dev/null || true
-    
+
     # Ensure Homebrew is in PATH (Apple Silicon)
     if [[ -f "/opt/homebrew/bin/brew" ]]; then
         if ! grep -q 'eval "$(/opt/homebrew/bin/brew shellenv)"' "$shell_rc" 2>/dev/null; then
@@ -564,29 +570,29 @@ configure_environment() {
             write_success "Added Homebrew to PATH"
         fi
     fi
-    
+
     # Add Python 3.12 to PATH
     local python_path="/opt/homebrew/opt/python@3.12/libexec/bin"
     [[ ! -d "$python_path" ]] && python_path="/usr/local/opt/python@3.12/libexec/bin"
-    
+
     if [[ -d "$python_path" ]] && ! grep -q "$python_path" "$shell_rc" 2>/dev/null; then
         echo '' >> "$shell_rc"
         echo '# Python 3.12' >> "$shell_rc"
         echo "export PATH=\"${python_path}:\$PATH\"" >> "$shell_rc"
         write_success "Added Python 3.12 to PATH"
     fi
-    
+
     # Add Node to PATH
     local node_path="/opt/homebrew/opt/node@22/bin"
     [[ ! -d "$node_path" ]] && node_path="/usr/local/opt/node@22/bin"
-    
+
     if [[ -d "$node_path" ]] && ! grep -q "$node_path" "$shell_rc" 2>/dev/null; then
         echo '' >> "$shell_rc"
         echo '# Node.js' >> "$shell_rc"
         echo "export PATH=\"${node_path}:\$PATH\"" >> "$shell_rc"
         write_success "Added Node.js to PATH"
     fi
-    
+
     # Configure Git defaults
     if command_exists git; then
         write_step "Configuring Git..."
@@ -594,7 +600,7 @@ configure_environment() {
         git config --global core.editor "code --wait" 2>/dev/null || true
         write_success "Git configured"
     fi
-    
+
     write_success "Environment configured"
     write_warn "Run 'source ${shell_rc}' or restart terminal to apply changes"
 }
@@ -606,19 +612,19 @@ configure_environment() {
 show_plan() {
     local action="INSTALLED"
     local color="$CYAN"
-    
+
     if [[ "$UNINSTALL" == true ]]; then
         action="REMOVED"
         color="$BLUE"
     fi
-    
+
     write_header "$(if [[ "$UNINSTALL" == true ]]; then echo 'Uninstallation'; else echo 'Installation'; fi) Plan"
-    
+
     echo -e "${color}The following will be ${action}:${NC}"
     echo ""
-    
+
     echo -e "${YELLOW}  Core:${NC}"
-    
+
     if [[ "$UNINSTALL" == true && "$KEEP_GIT" == true ]]; then
         echo -e "${GRAY}    - Git [KEEPING]${NC}"
     else
@@ -633,23 +639,23 @@ show_plan() {
     else
         echo "    - Python 3.12"
     fi
-    
+
     if [[ "$UNINSTALL" == true && "$KEEP_NODE" == true ]]; then
         echo -e "${GRAY}    - Node.js [KEEPING]${NC}"
     else
         echo "    - Node.js"
     fi
-    
+
     echo "    - Visual Studio Code"
     echo "    - Claude Code (npm)"
-    
+
     if [[ "$SKIP_OPTIONAL" == false ]]; then
         echo ""
         echo -e "${YELLOW}  Optional (Mac alternatives):${NC}"
         echo "    - fd (fast file finder - Everything alternative)"
         echo "    - ImageOptim (image optimizer - IrfanView alternative)"
     fi
-    
+
     if [[ "$SKIP_EXTRAS" == false ]]; then
         echo ""
         echo -e "${YELLOW}  Recommended Extras (prompted after core install):${NC}"
@@ -665,12 +671,12 @@ show_plan() {
     echo -e "${GRAY}    - Everything (Void Tools) - use 'fd' or Spotlight instead${NC}"
     echo -e "${GRAY}    - IrfanView - use Preview or ImageOptim instead${NC}"
     echo ""
-    
+
     if [[ "$WHATIF" == true ]]; then
         write_warn "WHATIF MODE - No changes will be made"
         return 0
     fi
-    
+
     if [[ "$FORCE" == false ]]; then
         if [[ "$UNINSTALL" == true ]]; then
             echo -n "Type 'YES' to confirm uninstall: "
@@ -688,53 +694,53 @@ show_plan() {
             fi
         fi
     fi
-    
+
     return 0
 }
 
 show_summary() {
     write_header "Summary"
-    
+
     if [[ ${#SUCCESSFUL[@]} -gt 0 ]]; then
         echo -e "${GREEN}Successful:${NC}"
         for item in "${SUCCESSFUL[@]}"; do
             echo -e "${GREEN}  + ${item}${NC}"
         done
     fi
-    
+
     if [[ ${#SKIPPED[@]} -gt 0 ]]; then
         echo -e "${YELLOW}Skipped:${NC}"
         for item in "${SKIPPED[@]}"; do
             echo -e "${YELLOW}  - ${item}${NC}"
         done
     fi
-    
+
     if [[ ${#NOT_FOUND[@]} -gt 0 ]]; then
         echo -e "${GRAY}Not Found:${NC}"
         for item in "${NOT_FOUND[@]}"; do
             echo -e "${GRAY}  . ${item}${NC}"
         done
     fi
-    
+
     if [[ ${#FAILED[@]} -gt 0 ]]; then
         echo -e "${RED}Failed:${NC}"
         for item in "${FAILED[@]}"; do
             echo -e "${RED}  x ${item}${NC}"
         done
     fi
-    
+
     echo ""
-    
+
     if [[ "$WHATIF" == false && ${#SUCCESSFUL[@]} -gt 0 ]]; then
         echo -e "${CYAN}NEXT: Restart terminal or run 'source ~/.zshrc'${NC}"
-        
+
         if [[ "$UNINSTALL" == false ]]; then
             echo ""
             echo -e "${CYAN}Verify:${NC}"
             echo "  code --version && git --version && gh --version && wget --version && python3 --version && node --version && claude --version"
         fi
     fi
-    
+
     echo ""
     echo -e "${GRAY}Audit log: ${LOG_FILE}${NC}"
 }
@@ -745,10 +751,10 @@ show_summary() {
 
 do_install() {
     write_header "Installing Core Packages"
-    
+
     # Casks
     install_cask "visual-studio-code" "Visual Studio Code" || true
-    
+
     # Formulae
     install_formula "git" "Git" || true
     install_formula "gh" "GitHub CLI" || true
@@ -774,7 +780,7 @@ do_install() {
     else
         write_warn "Skipping optional packages"
     fi
-    
+
     # Claude Code
     install_claude_code || true
 
@@ -793,7 +799,7 @@ do_uninstall() {
         write_warn "Keeping Claude Code (--keep-node)"
         SKIPPED+=("Claude Code")
     fi
-    
+
     # Optional
     if [[ "$SKIP_OPTIONAL" == false ]]; then
         write_header "Uninstalling Optional Packages"
@@ -806,23 +812,23 @@ do_uninstall() {
 
     # Core
     write_header "Uninstalling Core Packages"
-    
+
     uninstall_cask "visual-studio-code" "Visual Studio Code" || true
-    
+
     if [[ "$KEEP_NODE" == true ]]; then
         write_warn "Keeping Node.js"
         SKIPPED+=("Node.js LTS")
     else
         uninstall_formula "node@22" "Node.js LTS" || true
     fi
-    
+
     if [[ "$KEEP_PYTHON" == true ]]; then
         write_warn "Keeping Python"
         SKIPPED+=("Python 3.12")
     else
         uninstall_formula "python@3.12" "Python 3.12" || true
     fi
-    
+
     uninstall_formula "gh" "GitHub CLI" || true
     uninstall_formula "wget" "wget" || true
 
@@ -946,30 +952,30 @@ parse_args() {
 
 main() {
     parse_args "$@"
-    
+
     start_audit_log
-    
+
     if ! check_prerequisites; then
         write_err "Prerequisites check failed"
         exit 1
     fi
-    
+
     if ! show_plan; then
         exit 0
     fi
-    
+
     if [[ "$UNINSTALL" == true ]]; then
         do_uninstall
     else
         do_install
     fi
-    
+
     show_summary
-    
+
     if [[ ${#FAILED[@]} -gt 0 ]]; then
         exit 1
     fi
-    
+
     exit 0
 }
 

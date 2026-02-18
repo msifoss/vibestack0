@@ -1,6 +1,6 @@
 ================================================================================
                  VIBE CODING STACK (Security Hardened)
-                           Version 3.1.0
+                        Version 3.2.0-secure
 ================================================================================
 
 WINDOWS - PowerShell (as Administrator):
@@ -104,6 +104,13 @@ SECURITY FEATURES
   [+] WhatIf Mode            Preview all changes safely
   [+] Strict Mode            PowerShell strict mode enabled
 
+  Added in 3.2.0-secure (macOS):
+  [+] TLS 1.2 Enforcement   All curl calls require --tlsv1.2 minimum
+  [+] Log File Permissions   Audit logs created with chmod 600 (owner-only)
+  [+] Log Path Validation    Rejects path traversal sequences (../, //, /../)
+  [+] Version Pin Support    CLAUDE_CODE_VERSION variable for reproducible builds
+  [+] Unused Code Removed    Dead array declarations stripped from script
+
 
 AUDIT LOGS
 ----------
@@ -114,6 +121,7 @@ Every run creates a log file:
   Uninstall:  VibeCodingStack_Uninstall_YYYY-MM-DD_HHMMSS.log
 
 Location: Script directory, or %TEMP% if not writable.
+macOS: Log files are created with 600 permissions (owner read/write only).
 
 
 REQUIREMENTS
@@ -165,7 +173,7 @@ TROUBLESHOOTING
 
   macOS - "command not found: brew"
     Script will auto-install Homebrew, or manually run:
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/bash -c "$(curl -fsSL --tlsv1.2 https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
   Both - PATH not updated
     Close ALL terminal windows and reopen.
@@ -216,6 +224,10 @@ WHAT IS SAFE
   [SAFE] macOS: Claude Code installed from official @anthropic-ai npm scope
   [SAFE] macOS: User confirmation required before install and uninstall
   [SAFE] macOS: Uninstall requires typing "YES" (not just Y) for safety
+  [SAFE] macOS: All curl calls enforce TLS 1.2+ via --tlsv1.2 (v3.2.0)
+  [SAFE] macOS: Audit log files created with 600 permissions (v3.2.0)
+  [SAFE] macOS: Log file path validated against traversal attacks (v3.2.0)
+  [SAFE] macOS: Claude Code version pinning supported for reproducibility (v3.2.0)
 
   [SAFE] Both: Full audit logging with timestamps for every operation
   [SAFE] Both: WhatIf/--whatif preview mode makes zero changes
@@ -227,12 +239,13 @@ CONCERNS AND RISKS TO BE AWARE OF
 
   [MEDIUM] Remote code execution via Homebrew bootstrap (macOS)
     The Mac script downloads and executes the Homebrew installer:
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      /bin/bash -c "$(curl -fsSL --tlsv1.2 https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     This is the standard, officially recommended Homebrew installation method.
     Risk: If GitHub or the Homebrew repo were compromised, arbitrary code
     could execute. This is an accepted industry-standard risk shared by
     millions of macOS developers.
-    Mitigation: HTTPS-only, official Homebrew source, no custom modifications.
+    Mitigation: HTTPS-only with TLS 1.2+ enforced, official Homebrew source,
+    no custom modifications.
 
   [MEDIUM] Shell RC file modification (macOS)
     The Mac script appends PATH entries to ~/.zshrc, ~/.bash_profile, or
@@ -263,6 +276,7 @@ CONCERNS AND RISKS TO BE AWARE OF
     Risk: npm packages can run arbitrary install scripts. A compromised
     npm registry or package could execute malicious code.
     Mitigation: Uses the official @anthropic-ai npm scope (verified publisher).
+    macOS v3.2.0 adds CLAUDE_CODE_VERSION pinning for reproducible builds.
 
   [LOW] Git SSH override removal (macOS)
     If git is configured to rewrite GitHub HTTPS URLs to SSH, the Mac script
@@ -294,7 +308,7 @@ AUDIT METHODOLOGY
 -----------------
 
   This audit was performed by Claude Code (Anthropic Opus 4.6) on 2026-02-18.
-  Both scripts were read in their entirety (976 lines macOS, 757 lines Windows)
+  Both scripts were read in their entirety (981 lines macOS, 757 lines Windows)
   and analyzed for:
     - Embedded secrets or credentials
     - Remote code execution vectors
