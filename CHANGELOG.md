@@ -19,6 +19,7 @@ enforcement, locked-down audit logs, and version pinning. Windows removes the
 - (macOS) Add `CLAUDE_CODE_VERSION` variable for pinning Claude Code to a specific version
 - (macOS) Warn at runtime when Claude Code version is unpinned (latest)
 - (Windows) Invoke winget directly instead of shelling through `cmd.exe /c` — eliminates unnecessary intermediary process
+- (Windows) Resolve winget full path via `Get-Command` at startup to handle AppX alias resolution reliably with `Start-Process`
 
 ### Removed
 - Unused `declare -a` array variables (`CORE_FORMULAE`, `CORE_CASKS`, `OPTIONAL_FORMULAE`, `OPTIONAL_CASKS`, `PHASE2_FORMULAE`) that were never referenced

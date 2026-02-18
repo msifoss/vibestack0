@@ -335,7 +335,7 @@ function Invoke-WingetInstall {
     $wingetArgs = @("install", "--exact", "--id", $PackageId, "--source", "winget", "--scope", "machine", "--accept-source-agreements", "--accept-package-agreements", "--silent")
     Write-AuditEvent "COMMAND" "winget $($wingetArgs -join ' ')"
 
-    $result = Start-Process -FilePath "winget" -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
+    $result = Start-Process -FilePath $script:WingetPath -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
     
     if ($result.ExitCode -eq 0) {
         Write-Success "$DisplayName installed"
@@ -373,7 +373,7 @@ function Invoke-WingetUninstall {
     $wingetArgs = @("uninstall", "--exact", "--id", $PackageId, "--source", "winget", "--silent", "--accept-source-agreements")
     Write-AuditEvent "COMMAND" "winget $($wingetArgs -join ' ')"
 
-    $result = Start-Process -FilePath "winget" -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
+    $result = Start-Process -FilePath $script:WingetPath -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
     
     if ($result.ExitCode -eq 0) {
         Write-Success "$DisplayName uninstalled"
@@ -567,7 +567,8 @@ function Test-Prerequisites {
     if (-not (Test-CommandExists "winget")) {
         throw "winget required. Install App Installer from Microsoft Store."
     }
-    Write-Success "winget available"
+    $script:WingetPath = (Get-Command winget -ErrorAction Stop).Source
+    Write-Success "winget available ($script:WingetPath)"
     
     Write-Step "Updating winget sources..."
     winget source update --disable-interactivity 2>$null | Out-Null
