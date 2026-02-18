@@ -185,4 +185,130 @@ VERIFYING SCRIPT INTEGRITY
   macOS:
     shasum -a 256 ./VibeCodingStack.sh
 
+
+================================================================================
+                        CLAUDE CODE SECURITY AUDIT
+                            2026-02-18
+================================================================================
+
+An independent security audit was performed by Claude Code (Opus 4.6) against
+the full source of both VibeCodingStack-Mac.sh and VibeCodingStack-Windows.ps1.
+
+WHAT IS SAFE
+------------
+
+  [SAFE] No embedded secrets, API keys, or credentials in either script
+  [SAFE] No data exfiltration - scripts do not phone home or transmit data
+  [SAFE] No obfuscated or encoded code - all logic is readable and auditable
+  [SAFE] No backdoors, reverse shells, or hidden functionality
+  [SAFE] No file deletion outside of controlled uninstall operations
+  [SAFE] No user data collection or telemetry
+
+  [SAFE] Windows: Package allowlist blocks unapproved package IDs
+  [SAFE] Windows: --exact flag prevents winget substitution/typosquatting attacks
+  [SAFE] Windows: --source winget restricts to official Microsoft source only
+  [SAFE] Windows: Set-StrictMode -Version Latest catches common coding errors
+  [SAFE] Windows: #Requires -RunAsAdministrator enforced (no silent elevation)
+  [SAFE] Windows: SupportsShouldProcess enables native -WhatIf preview
+
+  [SAFE] macOS: Packages installed only from Homebrew official formulae/casks
+  [SAFE] macOS: set -uo pipefail catches unset variables and pipe failures
+  [SAFE] macOS: Claude Code installed from official @anthropic-ai npm scope
+  [SAFE] macOS: User confirmation required before install and uninstall
+  [SAFE] macOS: Uninstall requires typing "YES" (not just Y) for safety
+
+  [SAFE] Both: Full audit logging with timestamps for every operation
+  [SAFE] Both: WhatIf/--whatif preview mode makes zero changes
+  [SAFE] Both: Git configured with safe defaults (init.defaultBranch main)
+  [SAFE] Both: All packages are well-known, widely-used open-source tools
+
+CONCERNS AND RISKS TO BE AWARE OF
+----------------------------------
+
+  [MEDIUM] Remote code execution via Homebrew bootstrap (macOS)
+    The Mac script downloads and executes the Homebrew installer:
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    This is the standard, officially recommended Homebrew installation method.
+    Risk: If GitHub or the Homebrew repo were compromised, arbitrary code
+    could execute. This is an accepted industry-standard risk shared by
+    millions of macOS developers.
+    Mitigation: HTTPS-only, official Homebrew source, no custom modifications.
+
+  [MEDIUM] Shell RC file modification (macOS)
+    The Mac script appends PATH entries to ~/.zshrc, ~/.bash_profile, or
+    ~/.profile. These changes persist after uninstall.
+    Risk: Accumulates PATH entries on repeated runs; modifies user shell
+    startup environment permanently.
+    Mitigation: Script checks for existing entries before adding (grep guard).
+
+  [MEDIUM] System PATH modification (Windows)
+    The Windows script modifies the system-wide PATH environment variable
+    using [Environment]::SetEnvironmentVariable("Path", ..., "Machine").
+    Risk: Affects all users on multi-user systems. Incorrect cleanup
+    during uninstall could break other applications.
+    Mitigation: Uses wildcard-pattern-based cleanup; reversible via uninstall.
+
+  [MEDIUM] Git global/system config changes (both platforms)
+    Both scripts set git configuration:
+      macOS:   git config --global init.defaultBranch main
+               git config --global core.editor "code --wait"
+      Windows: git config --system core.autocrlf true
+               git config --system init.defaultBranch main
+    Risk: Overrides existing user/system git preferences without backup.
+    Mitigation: Uninstall mode reverses system-level settings (Windows).
+    Note: macOS global config changes are NOT reversed on uninstall.
+
+  [MEDIUM] npm global package install (both platforms)
+    Claude Code is installed via: npm install -g @anthropic-ai/claude-code
+    Risk: npm packages can run arbitrary install scripts. A compromised
+    npm registry or package could execute malicious code.
+    Mitigation: Uses the official @anthropic-ai npm scope (verified publisher).
+
+  [LOW] Git SSH override removal (macOS)
+    If git is configured to rewrite GitHub HTTPS URLs to SSH, the Mac script
+    removes this override to allow Homebrew to function.
+    Risk: May break workflows that depend on SSH-based git access to GitHub.
+    Mitigation: Only removes the specific insteadOf override; warns before
+    acting; SSH keys and config remain intact.
+
+  [LOW] Homebrew self-repair reinstall (macOS)
+    If Homebrew does not recognize the macOS version, the script reinstalls
+    Homebrew from scratch by re-running the official installer.
+    Risk: Additional remote code execution on a potentially unexpected
+    code path.
+    Mitigation: Same official Homebrew installer; only triggered when
+    Homebrew reports macOS as "unsupported" or "unknown".
+
+  [LOW] pip auto-upgrade (Windows)
+    The Windows script runs: python -m pip install --upgrade pip --quiet
+    Risk: Downloads pip from PyPI; could be affected by a PyPI compromise.
+    Mitigation: Uses official PyPI; pip is a first-party Python tool.
+
+  [NONE] No credential harvesting or exfiltration
+  [NONE] No network listeners or open ports
+  [NONE] No modification of system security settings (firewall, antivirus)
+  [NONE] No scheduled tasks or persistent background processes created
+  [NONE] No browser extensions or certificates installed
+
+AUDIT METHODOLOGY
+-----------------
+
+  This audit was performed by Claude Code (Anthropic Opus 4.6) on 2026-02-18.
+  Both scripts were read in their entirety (976 lines macOS, 757 lines Windows)
+  and analyzed for:
+    - Embedded secrets or credentials
+    - Remote code execution vectors
+    - Data exfiltration or telemetry
+    - Obfuscated or encoded payloads
+    - Unauthorized file system changes
+    - Privilege escalation beyond stated requirements
+    - Supply chain risks (package sources and registries)
+    - Environment persistence and reversibility
+
+  Conclusion: Both scripts do exactly what they claim to do - install a
+  curated set of developer tools using official package managers. The security
+  hardening measures (allowlist, exact matching, audit logging, confirmation
+  prompts) are genuine and effective. The identified concerns are standard
+  risks inherent to using package managers and are not unique to this project.
+
 ================================================================================
