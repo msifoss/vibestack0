@@ -8,6 +8,7 @@
     This script manages:
     - Visual Studio Code
     - Git for Windows (Git Bash)
+    - GitHub CLI (gh)
     - Python
     - Node.js (required for Claude Code)
     - Claude Code CLI
@@ -86,6 +87,7 @@ $ScriptDate = "2025-01-24"
 $AllowedPackages = @{
     "Microsoft.VisualStudioCode" = "Visual Studio Code"
     "Git.Git" = "Git for Windows"
+    "GitHub.cli" = "GitHub CLI"
     "Python.Python.3.12" = "Python 3.12"
     "OpenJS.NodeJS.LTS" = "Node.js LTS"
     "voidtools.Everything" = "Everything Search"
@@ -95,6 +97,7 @@ $AllowedPackages = @{
 $CorePackages = @(
     @{ Id = "Microsoft.VisualStudioCode"; Name = "Visual Studio Code"; KeepFlag = $false }
     @{ Id = "Git.Git"; Name = "Git for Windows"; KeepFlag = $KeepGit }
+    @{ Id = "GitHub.cli"; Name = "GitHub CLI"; KeepFlag = $false }
     @{ Id = "Python.Python.3.12"; Name = "Python 3.12"; KeepFlag = $KeepPython }
     @{ Id = "OpenJS.NodeJS.LTS"; Name = "Node.js LTS"; KeepFlag = $KeepNodeJS }
 )

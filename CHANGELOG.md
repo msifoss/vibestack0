@@ -22,6 +22,9 @@ enforcement, locked-down audit logs, and version pinning. Windows removes the
 - (Windows) Resolve winget full path via `Get-Command` at startup to handle AppX alias resolution reliably with `Start-Process`
 - (Windows) Add `--disable-interactivity` to all winget install and uninstall calls to prevent hidden prompts from stalling the script
 
+### Added
+- (Windows) GitHub CLI (`gh`) to core packages and allowlist
+
 ### Removed
 - (macOS) Unused `declare -a` array variables (`CORE_FORMULAE`, `CORE_CASKS`, `OPTIONAL_FORMULAE`, `OPTIONAL_CASKS`, `PHASE2_FORMULAE`) that were never referenced
 - (Windows) IrfanView and IrfanView Plugins from optional packages, allowlist, and all documentation
