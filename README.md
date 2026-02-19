@@ -41,6 +41,7 @@ WHAT GETS INSTALLED
   Optional - Windows:
     - Everything Search      (voidtools.Everything)
     - Everything CLI         (voidtools.Everything.Cli)
+
   Optional - macOS (alternatives):
     - fd                     (fast file finder - Everything alternative)
     - ImageOptim             (image optimizer)
@@ -100,12 +101,20 @@ SECURITY FEATURES
   [+] WhatIf Mode            Preview all changes safely
   [+] Strict Mode            PowerShell strict mode enabled
 
-  Added in 3.2.0-secure (macOS):
+  Added in 3.2.0-secure:
+
+  macOS:
   [+] TLS 1.2 Enforcement   All curl calls require --tlsv1.2 minimum
   [+] Log File Permissions   Audit logs created with chmod 600 (owner-only)
   [+] Log Path Validation    Rejects path traversal sequences (../, //, /../)
   [+] Version Pin Support    CLAUDE_CODE_VERSION variable for reproducible builds
   [+] Unused Code Removed    Dead array declarations stripped from script
+
+  Windows:
+  [+] Direct Winget          Invokes winget directly (removed cmd.exe intermediary)
+  [+] Resolved Path          Resolves winget.exe full path via Get-Command at startup
+  [+] No Interactivity       --disable-interactivity prevents hidden prompts/stalls
+  [+] IrfanView Removed      Dropped from optional packages and allowlist
 
 
 AUDIT LOGS
@@ -214,6 +223,8 @@ WHAT IS SAFE
   [SAFE] Windows: Set-StrictMode -Version Latest catches common coding errors
   [SAFE] Windows: #Requires -RunAsAdministrator enforced (no silent elevation)
   [SAFE] Windows: SupportsShouldProcess enables native -WhatIf preview
+  [SAFE] Windows: winget invoked directly via resolved full path (v3.2.0)
+  [SAFE] Windows: --disable-interactivity prevents hidden prompts (v3.2.0)
 
   [SAFE] macOS: Packages installed only from Homebrew official formulae/casks
   [SAFE] macOS: set -uo pipefail catches unset variables and pipe failures
@@ -304,7 +315,7 @@ AUDIT METHODOLOGY
 -----------------
 
   This audit was performed by Claude Code (Anthropic Opus 4.6) on 2026-02-18.
-  Both scripts were read in their entirety (981 lines macOS, 757 lines Windows)
+  Both scripts were read in their entirety (980 lines macOS, 752 lines Windows)
   and analyzed for:
     - Embedded secrets or credentials
     - Remote code execution vectors
