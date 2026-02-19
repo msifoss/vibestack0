@@ -332,7 +332,7 @@ function Invoke-WingetInstall {
         return $true
     }
     
-    $wingetArgs = @("install", "--exact", "--id", $PackageId, "--source", "winget", "--scope", "machine", "--accept-source-agreements", "--accept-package-agreements", "--silent")
+    $wingetArgs = @("install", "--exact", "--id", $PackageId, "--source", "winget", "--scope", "machine", "--accept-source-agreements", "--accept-package-agreements", "--silent", "--disable-interactivity")
     Write-AuditEvent "COMMAND" "winget $($wingetArgs -join ' ')"
 
     $result = Start-Process -FilePath $script:WingetPath -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
@@ -370,7 +370,7 @@ function Invoke-WingetUninstall {
         return $true
     }
     
-    $wingetArgs = @("uninstall", "--exact", "--id", $PackageId, "--source", "winget", "--silent", "--accept-source-agreements")
+    $wingetArgs = @("uninstall", "--exact", "--id", $PackageId, "--source", "winget", "--silent", "--accept-source-agreements", "--disable-interactivity")
     Write-AuditEvent "COMMAND" "winget $($wingetArgs -join ' ')"
 
     $result = Start-Process -FilePath $script:WingetPath -ArgumentList $wingetArgs -Wait -PassThru -NoNewWindow
