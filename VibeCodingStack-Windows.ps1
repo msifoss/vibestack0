@@ -12,13 +12,12 @@
     - Node.js (required for Claude Code)
     - Claude Code CLI
     - Everything (Void Tools)
-    - IrfanView
 
 .PARAMETER Uninstall
     Switch to uninstall mode. Without this flag, the script installs.
 
 .PARAMETER SkipOptional
-    Skip optional tools (Everything, IrfanView)
+    Skip optional tools (Everything)
 
 .PARAMETER WhatIf
     Preview mode - shows what would happen without making changes
@@ -91,8 +90,6 @@ $AllowedPackages = @{
     "OpenJS.NodeJS.LTS" = "Node.js LTS"
     "voidtools.Everything" = "Everything Search"
     "voidtools.Everything.Cli" = "Everything CLI"
-    "IrfanSkiljan.IrfanView" = "IrfanView"
-    "IrfanSkiljan.IrfanView.PlugIns" = "IrfanView Plugins"
 }
 
 $CorePackages = @(
@@ -105,8 +102,6 @@ $CorePackages = @(
 $OptionalPackages = @(
     @{ Id = "voidtools.Everything"; Name = "Everything Search" }
     @{ Id = "voidtools.Everything.Cli"; Name = "Everything CLI" }
-    @{ Id = "IrfanSkiljan.IrfanView"; Name = "IrfanView" }
-    @{ Id = "IrfanSkiljan.IrfanView.PlugIns"; Name = "IrfanView Plugins" }
 )
 
 $ClaudeCodePackage = "@anthropic-ai/claude-code"

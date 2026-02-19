@@ -23,7 +23,8 @@ enforcement, locked-down audit logs, and version pinning. Windows removes the
 - (Windows) Add `--disable-interactivity` to all winget install and uninstall calls to prevent hidden prompts from stalling the script
 
 ### Removed
-- Unused `declare -a` array variables (`CORE_FORMULAE`, `CORE_CASKS`, `OPTIONAL_FORMULAE`, `OPTIONAL_CASKS`, `PHASE2_FORMULAE`) that were never referenced
+- (macOS) Unused `declare -a` array variables (`CORE_FORMULAE`, `CORE_CASKS`, `OPTIONAL_FORMULAE`, `OPTIONAL_CASKS`, `PHASE2_FORMULAE`) that were never referenced
+- (Windows) IrfanView and IrfanView Plugins from optional packages, allowlist, and all documentation
 
 ### Changed
 - Bump version to `3.2.0-secure` in script header and `VERSION` variable

@@ -653,7 +653,7 @@ show_plan() {
         echo ""
         echo -e "${YELLOW}  Optional (Mac alternatives):${NC}"
         echo "    - fd (fast file finder - Everything alternative)"
-        echo "    - ImageOptim (image optimizer - IrfanView alternative)"
+        echo "    - ImageOptim (image optimizer)"
     fi
 
     if [[ "$SKIP_EXTRAS" == false ]]; then
@@ -669,7 +669,6 @@ show_plan() {
     echo ""
     echo -e "${YELLOW}  Note: Windows-only tools not available:${NC}"
     echo -e "${GRAY}    - Everything (Void Tools) - use 'fd' or Spotlight instead${NC}"
-    echo -e "${GRAY}    - IrfanView - use Preview or ImageOptim instead${NC}"
     echo ""
 
     if [[ "$WHATIF" == true ]]; then
@@ -882,7 +881,7 @@ PACKAGES:
 
     Optional (Mac alternatives):
       - fd (fast file finder - replaces Everything)
-      - ImageOptim (image optimizer - replaces IrfanView)
+      - ImageOptim (image optimizer)
 
     Recommended Extras (prompted after core install):
       - jq (JSON processor)

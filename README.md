@@ -41,12 +41,9 @@ WHAT GETS INSTALLED
   Optional - Windows:
     - Everything Search      (voidtools.Everything)
     - Everything CLI         (voidtools.Everything.Cli)
-    - IrfanView              (IrfanSkiljan.IrfanView)
-    - IrfanView Plugins      (IrfanSkiljan.IrfanView.PlugIns)
-
   Optional - macOS (alternatives):
     - fd                     (fast file finder - Everything alternative)
-    - ImageOptim             (image optimizer - IrfanView alternative)
+    - ImageOptim             (image optimizer)
 
   Recommended Extras - macOS (prompted after core install):
     - jq                     (JSON processor)
@@ -57,7 +54,6 @@ WHAT GETS INSTALLED
 
   Windows-only (no Mac equivalent):
     - Everything (Void Tools) - use Spotlight, fd, or Alfred on Mac
-    - IrfanView - use Preview, ImageOptim, or Pixelmator on Mac
 
 
 COMMAND-LINE OPTIONS
