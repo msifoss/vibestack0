@@ -471,6 +471,50 @@
     letter-spacing: 0.02em;
   }
 
+  /* ─── IT APPROVAL WARNING ─── */
+  .it-warning {
+    background: rgba(255,107,107,0.08);
+    border: 2px solid var(--accent3);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 0 0 24px;
+    max-width: 680px;
+    animation: warning-pulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes warning-pulse {
+    0%, 100% { border-color: var(--accent3); box-shadow: 0 0 0 0 rgba(255,107,107,0); }
+    50% { border-color: #ff4444; box-shadow: 0 0 18px rgba(255,107,107,0.15); }
+  }
+
+  .it-warning-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .it-warning-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .it-warning-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--accent3);
+    letter-spacing: -0.01em;
+  }
+
+  .it-warning-body {
+    color: #f0a0a0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .it-warning-body strong { color: #fff; font-weight: 600; }
+
   @media (max-width: 900px) {
     .os-divider { padding: 0 24px; }
     .big-step { grid-template-columns: 48px 1fr; gap: 0 16px; }
@@ -558,6 +602,16 @@
             <p class="big-step-explain">
               First, you need to grab the setup file. Click the button below to go to GitHub, then click the <strong>download</strong> icon (a little arrow pointing down) to save the file. Put it somewhere easy to find — like your <strong>Desktop</strong> or your <strong>Downloads</strong> folder.
             </p>
+
+            <div class="it-warning">
+              <div class="it-warning-header">
+                <span class="it-warning-icon">🛑</span>
+                <span class="it-warning-title">Check with your IT department first!</span>
+              </div>
+              <div class="it-warning-body">
+                If you're using a <strong>work or school computer</strong>, get approval from your <strong>BU IT department</strong> before running this script. It installs software system-wide, which may conflict with your organization's security policies or managed software. <strong>Personal computers</strong> — you're good to go.
+              </div>
+            </div>
 
             <a href="https://github.com/msifoss/vibestack0/blob/master/VibeCodingStack-Windows.ps1" target="_blank" class="dl-btn dl-btn-win">
               <span class="dl-icon">↓</span>
@@ -809,6 +863,16 @@
             <p class="big-step-explain">
               First, grab the setup file. Click the button below to go to GitHub, then click the <strong>download</strong> icon to save the file. Your <strong>Desktop</strong> or <strong>Downloads</strong> folder both work great.
             </p>
+
+            <div class="it-warning">
+              <div class="it-warning-header">
+                <span class="it-warning-icon">🛑</span>
+                <span class="it-warning-title">Check with your IT department first!</span>
+              </div>
+              <div class="it-warning-body">
+                If you're using a <strong>work or school computer</strong>, get approval from your <strong>BU IT department</strong> before running this script. It installs software system-wide, which may conflict with your organization's security policies or managed software. <strong>Personal computers</strong> — you're good to go.
+              </div>
+            </div>
 
             <a href="https://github.com/msifoss/vibestack0/blob/master/VibeCodingStack-Mac.sh" target="_blank" class="dl-btn dl-btn-mac">
               <span class="dl-icon">↓</span>
