@@ -33,10 +33,12 @@ WHAT GETS INSTALLED
     - Visual Studio Code
     - Git
     - GitHub CLI (gh)
-    - wget
     - Python 3.12
     - Node.js LTS
     - Claude Code (@anthropic-ai/claude-code)
+
+  Core - macOS only:
+    - wget                   (PowerShell has Invoke-WebRequest on Windows)
 
   Optional - Windows:
     - Everything Search      (voidtools.Everything)
