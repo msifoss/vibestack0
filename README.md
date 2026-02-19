@@ -154,6 +154,7 @@ POST-INSTALLATION
   2. Verify:
      code --version
      git --version
+     gh --version
      python --version
      node --version
      claude --version
@@ -317,7 +318,7 @@ AUDIT METHODOLOGY
 -----------------
 
   This audit was performed by Claude Code (Anthropic Opus 4.6) on 2026-02-18.
-  Both scripts were read in their entirety (980 lines macOS, 752 lines Windows)
+  Both scripts were read in their entirety (980 lines macOS, 755 lines Windows)
   and analyzed for:
     - Embedded secrets or credentials
     - Remote code execution vectors

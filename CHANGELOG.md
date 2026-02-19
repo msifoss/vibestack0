@@ -10,7 +10,8 @@ Most recent changes appear first.
 
 **TLDR:** Security hardening pass on both scripts — macOS gets TLS 1.2
 enforcement, locked-down audit logs, and version pinning. Windows removes the
-`cmd.exe` intermediary so winget is invoked directly. Dead code removed from both.
+`cmd.exe` intermediary so winget is invoked directly, adds GitHub CLI, and drops
+IrfanView. Dead code removed from both.
 
 ### Security
 - (macOS) Enforce TLS 1.2 minimum on all `curl` calls via `--tlsv1.2` (3 locations)
@@ -34,6 +35,8 @@ enforcement, locked-down audit logs, and version pinning. Windows removes the
 - Strip trailing whitespace from entire Mac script
 - Update README security features section with 3.2.0-secure additions
 - Update README security audit with new `[SAFE]` items and revised mitigations
+- Clarify `wget` is macOS-only in README (Windows has `Invoke-WebRequest` built in)
+- Add `gh --version` to post-install verification command list
 
 ---
 
