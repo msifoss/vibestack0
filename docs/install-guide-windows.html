@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding Stack — Windows Installation Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ─── PAGE-SPECIFIC: Windows ─── */
+  .badge-red { background: rgba(255,107,107,0.1); color: var(--accent3); border: 1px solid rgba(255,107,107,0.25); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .step { animation: fadeUp 0.4s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-tag">Install Guide</div>
+    <div class="logo-name">Vibe<span>.</span>Stack</div>
+  </div>
+  <a href="index.html" class="nav-home">← Back to Home</a>
+  <div class="nav-label">Contents</div>
+  <ul class="nav-list">
+    <li><a href="#overview"><span class="nav-num">01</span> Overview</a></li>
+    <li><a href="#prerequisites"><span class="nav-num">02</span> Prerequisites</a></li>
+    <li><a href="#installation"><span class="nav-num">03</span> Installation</a></li>
+    <li><a href="#environment"><span class="nav-num">04</span> Environment</a></li>
+    <li><a href="#claude"><span class="nav-num">05</span> Claude Code</a></li>
+    <li><a href="#optional"><span class="nav-num">06</span> Optional Tools</a></li>
+    <li><a href="#verify"><span class="nav-num">07</span> Verification</a></li>
+    <li><a href="#uninstall"><span class="nav-num">08</span> Uninstallation</a></li>
+    <li><a href="#troubleshoot"><span class="nav-num">09</span> Troubleshooting</a></li>
+  </ul>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Windows Installation</div>
+    <h1>Set up your<br><em>Vibe Coding Stack</em><br>from scratch.</h1>
+    <p style="color: var(--muted); max-width: 540px; font-size: 14px; margin-top: 12px;">
+      This guide walks through every step that <code style="color:var(--accent2)">VibeCodingStack-Windows.ps1</code> automates — so you understand exactly what's being installed and why.
+    </p>
+    <div class="hero-meta">
+      <span class="badge badge-green">⊞ Windows 10 / 11</span>
+      <span class="badge badge-blue">⏱ 20–40 minutes</span>
+      <span class="badge badge-red">🛡 Admin required</span>
+    </div>
+  </section>
+
+  <!-- 01 OVERVIEW -->
+  <section class="section" id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Overview</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">The following tools will be installed on your machine. Core tools are required; optional tools enhance the experience.</p>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-icon">⬡</div>
+        <div class="tool-name">VS Code</div>
+        <div class="tool-purpose">Primary code editor</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">⎇</div>
+        <div class="tool-name">Git for Windows</div>
+        <div class="tool-purpose">Version control + Git Bash</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">◈</div>
+        <div class="tool-name">GitHub CLI</div>
+        <div class="tool-purpose">GitHub ops from terminal</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🐍</div>
+        <div class="tool-name">Python 3.12</div>
+        <div class="tool-purpose">Python runtime</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">⬡</div>
+        <div class="tool-name">Node.js LTS</div>
+        <div class="tool-purpose">JS runtime (needed for Claude Code)</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">◆</div>
+        <div class="tool-name">Claude Code</div>
+        <div class="tool-purpose">Anthropic's AI coding CLI</div>
+      </div>
+      <div class="tool-card optional">
+        <div class="tool-icon">🔍</div>
+        <div class="tool-name">Everything Search</div>
+        <div class="tool-purpose">Instant file search · optional</div>
+      </div>
+      <div class="tool-card optional">
+        <div class="tool-icon">$_</div>
+        <div class="tool-name">Everything CLI</div>
+        <div class="tool-purpose">CLI for Everything · optional</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 PREREQUISITES -->
+  <section class="section" id="prerequisites">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Prerequisites</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step" data-n="→">
+        <div class="step-title">System Requirements</div>
+        <p>Windows 10 or later (Windows 11 recommended). You must have <strong style="color:var(--text)">Administrator privileges</strong> — right-click PowerShell and choose <em>Run as Administrator</em> for all steps.</p>
+      </div>
+
+      <div class="step" data-n="→">
+        <div class="step-title">Ensure winget is available</div>
+        <p>winget (Windows Package Manager) comes pre-installed on Windows 11. On Windows 10, install <strong style="color:var(--text)">App Installer</strong> from the Microsoft Store if the command below fails.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> --version</pre>
+        </div>
+        <p>If a version number is returned, you're ready to go.</p>
+      </div>
+
+      <div class="step" data-n="→">
+        <div class="step-title">Update winget sources</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> source update <span class="pm">--disable-interactivity</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 INSTALLATION -->
+  <section class="section" id="installation">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Step-by-Step Installation</h2>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>Open PowerShell as Administrator</strong>
+      All commands below require elevated privileges. Each winget command uses <code>--exact --id</code> to get the correct package and <code>--scope machine</code> for a system-wide install.
+    </div>
+
+    <div class="steps" style="margin-top:32px;">
+
+      <div class="step" data-n="3.1">
+        <div class="step-title">Install Visual Studio Code</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> install <span class="pm">--exact --id</span> <span class="str">Microsoft.VisualStudioCode</span> <span class="pm">--source</span> winget <span class="pm">--scope</span> machine <span class="pm">--accept-source-agreements --accept-package-agreements --silent --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.2">
+        <div class="step-title">Install Git for Windows</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> install <span class="pm">--exact --id</span> <span class="str">Git.Git</span> <span class="pm">--source</span> winget <span class="pm">--scope</span> machine <span class="pm">--accept-source-agreements --accept-package-agreements --silent --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.3">
+        <div class="step-title">Install GitHub CLI</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> install <span class="pm">--exact --id</span> <span class="str">GitHub.cli</span> <span class="pm">--source</span> winget <span class="pm">--scope</span> machine <span class="pm">--accept-source-agreements --accept-package-agreements --silent --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.4">
+        <div class="step-title">Install Python 3.12</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> install <span class="pm">--exact --id</span> <span class="str">Python.Python.3.12</span> <span class="pm">--source</span> winget <span class="pm">--scope</span> machine <span class="pm">--accept-source-agreements --accept-package-agreements --silent --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.5">
+        <div class="step-title">Install Node.js LTS</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> install <span class="pm">--exact --id</span> <span class="str">OpenJS.NodeJS.LTS</span> <span class="pm">--source</span> winget <span class="pm">--scope</span> machine <span class="pm">--accept-source-agreements --accept-package-agreements --silent --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04 ENVIRONMENT -->
+  <section class="section" id="environment">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Environment Configuration</h2>
+    </div>
+
+    <div class="callout callout-warn" style="margin-bottom:32px;">
+      <strong>Restart PowerShell after PATH changes</strong>
+      Close and reopen PowerShell as Administrator, or run the session-refresh commands in step 4.3 to apply changes immediately.
+    </div>
+
+    <div class="steps">
+
+      <div class="step" data-n="4.1">
+        <div class="step-title">Add tools to System PATH</div>
+        <p>The installers usually handle this automatically. If any command isn't found, add its path manually:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="cm"># VS Code</span>
+<span class="kw">[Environment]</span>::SetEnvironmentVariable(<span class="str">"Path"</span>, <span class="kw">[Environment]</span>::GetEnvironmentVariable(<span class="str">"Path"</span>, <span class="str">"Machine"</span>) + <span class="str">";C:\Program Files\Microsoft VS Code\bin"</span>, <span class="str">"Machine"</span>)
+
+<span class="cm"># Git</span>
+<span class="kw">[Environment]</span>::SetEnvironmentVariable(<span class="str">"Path"</span>, <span class="kw">[Environment]</span>::GetEnvironmentVariable(<span class="str">"Path"</span>, <span class="str">"Machine"</span>) + <span class="str">";C:\Program Files\Git\cmd"</span>, <span class="str">"Machine"</span>)
+
+<span class="cm"># Python 3.12 + Scripts</span>
+<span class="kw">[Environment]</span>::SetEnvironmentVariable(<span class="str">"Path"</span>, <span class="kw">[Environment]</span>::GetEnvironmentVariable(<span class="str">"Path"</span>, <span class="str">"Machine"</span>) + <span class="str">";C:\Program Files\Python312;C:\Program Files\Python312\Scripts"</span>, <span class="str">"Machine"</span>)
+
+<span class="cm"># Node.js</span>
+<span class="kw">[Environment]</span>::SetEnvironmentVariable(<span class="str">"Path"</span>, <span class="kw">[Environment]</span>::GetEnvironmentVariable(<span class="str">"Path"</span>, <span class="str">"Machine"</span>) + <span class="str">";C:\Program Files\nodejs"</span>, <span class="str">"Machine"</span>)</pre>
+        </div>
+        <div class="callout callout-tip">
+          <strong>Tip: Check before adding</strong>
+          Verify a path isn't already present to avoid duplicates: <code style="color:var(--accent)">[Environment]::GetEnvironmentVariable("Path", "Machine") -split ";" | Select-String "VS Code"</code>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.2">
+        <div class="step-title">Set PYTHONUTF8 environment variable</div>
+        <p>Forces Python to default to UTF-8 encoding, preventing character encoding issues.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="kw">[Environment]</span>::SetEnvironmentVariable(<span class="str">"PYTHONUTF8"</span>, <span class="str">"1"</span>, <span class="str">"Machine"</span>)</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.3">
+        <div class="step-title">Refresh current session</div>
+        <p>Apply the new PATH and variables without restarting PowerShell:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fl">$env:Path</span> = <span class="kw">[Environment]</span>::GetEnvironmentVariable(<span class="str">"Path"</span>, <span class="str">"Machine"</span>) + <span class="str">";"</span> + <span class="kw">[Environment]</span>::GetEnvironmentVariable(<span class="str">"Path"</span>, <span class="str">"User"</span>)
+<span class="fl">$env:PYTHONUTF8</span> = <span class="str">"1"</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.4">
+        <div class="step-title">Configure Git</div>
+        <p>Set at the system level (applies to all users) since we're running as Administrator:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">git</span> config <span class="pm">--system</span> core.autocrlf true
+<span class="fn">git</span> config <span class="pm">--system</span> init.defaultBranch main</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.5">
+        <div class="step-title">Upgrade pip</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">python</span> -m pip install <span class="pm">--upgrade</span> pip <span class="pm">--quiet</span></pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 05 CLAUDE CODE -->
+  <section class="section" id="claude">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Claude Code Installation</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:580px;">Claude Code is Anthropic's AI-powered coding assistant. It's installed globally via npm, which comes bundled with Node.js.</p>
+
+    <div class="steps">
+      <div class="step" data-n="5.1">
+        <div class="step-title">Install via npm</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">npm</span> install <span class="pm">-g</span> <span class="str">@anthropic-ai/claude-code</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="5.2">
+        <div class="step-title">Verify installation</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">claude</span> --version</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 OPTIONAL -->
+  <section class="section" id="optional">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Optional Packages</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px;">These tools are not required but enhance file search capabilities significantly.</p>
+
+    <div class="steps">
+      <div class="step" data-n="6.1">
+        <div class="step-title">Everything Search</div>
+        <p>Instant file search by name from Void Tools. Finds any file on your system in milliseconds.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> install <span class="pm">--exact --id</span> <span class="str">voidtools.Everything</span> <span class="pm">--source</span> winget <span class="pm">--scope</span> machine <span class="pm">--accept-source-agreements --accept-package-agreements --silent --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="6.2">
+        <div class="step-title">Everything CLI</div>
+        <p>Command-line interface for Everything Search — query your file system from the terminal.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> install <span class="pm">--exact --id</span> <span class="str">voidtools.Everything.Cli</span> <span class="pm">--source</span> winget <span class="pm">--scope</span> machine <span class="pm">--accept-source-agreements --accept-package-agreements --silent --disable-interactivity</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 VERIFY -->
+  <section class="section" id="verify">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Verification</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:20px; font-size:13px;">Close and reopen all terminal windows, then run each command. Every one should return a version number with no errors.</p>
+
+    <div class="code-block">
+      <div class="code-bar">
+        <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span>PowerShell — new window</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="fn">code</span>   --version
+<span class="fn">git</span>    --version
+<span class="fn">python</span> --version
+<span class="fn">node</span>   --version
+<span class="fn">claude</span> --version</pre>
+    </div>
+
+    <div class="verify-grid">
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">code --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">git --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">python --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">node --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">claude --version</span></div>
+    </div>
+  </section>
+
+  <!-- 08 UNINSTALL -->
+  <section class="section" id="uninstall">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">Uninstallation</h2>
+    </div>
+
+    <div class="callout callout-warn" style="margin-bottom:32px;">
+      <strong>Order matters</strong>
+      Uninstall Claude Code first while npm is still available, then remove the other packages.
+    </div>
+
+    <div class="steps">
+
+      <div class="step" data-n="8.1">
+        <div class="step-title">Uninstall Claude Code first</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">npm</span> uninstall <span class="pm">-g</span> <span class="str">@anthropic-ai/claude-code</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="8.2">
+        <div class="step-title">Uninstall optional packages</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> uninstall <span class="pm">--exact --id</span> <span class="str">voidtools.Everything.Cli</span> <span class="pm">--source</span> winget <span class="pm">--silent --accept-source-agreements --disable-interactivity</span>
+<span class="fn">winget</span> uninstall <span class="pm">--exact --id</span> <span class="str">voidtools.Everything</span>     <span class="pm">--source</span> winget <span class="pm">--silent --accept-source-agreements --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="8.3">
+        <div class="step-title">Uninstall core packages</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">winget</span> uninstall <span class="pm">--exact --id</span> <span class="str">Microsoft.VisualStudioCode</span> <span class="pm">--source</span> winget <span class="pm">--silent --accept-source-agreements --disable-interactivity</span>
+<span class="fn">winget</span> uninstall <span class="pm">--exact --id</span> <span class="str">Git.Git</span>                    <span class="pm">--source</span> winget <span class="pm">--silent --accept-source-agreements --disable-interactivity</span>
+<span class="fn">winget</span> uninstall <span class="pm">--exact --id</span> <span class="str">GitHub.cli</span>                 <span class="pm">--source</span> winget <span class="pm">--silent --accept-source-agreements --disable-interactivity</span>
+<span class="fn">winget</span> uninstall <span class="pm">--exact --id</span> <span class="str">Python.Python.3.12</span>         <span class="pm">--source</span> winget <span class="pm">--silent --accept-source-agreements --disable-interactivity</span>
+<span class="fn">winget</span> uninstall <span class="pm">--exact --id</span> <span class="str">OpenJS.NodeJS.LTS</span>           <span class="pm">--source</span> winget <span class="pm">--silent --accept-source-agreements --disable-interactivity</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="8.4">
+        <div class="step-title">Clean up PATH entries</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fl">$currentPath</span> = <span class="kw">[Environment]</span>::GetEnvironmentVariable(<span class="str">"Path"</span>, <span class="str">"Machine"</span>)
+<span class="fl">$patterns</span>    = <span class="kw">@</span>(<span class="str">"*\Microsoft VS Code\*"</span>, <span class="str">"*\Git\*"</span>, <span class="str">"*\Python312*"</span>, <span class="str">"*\nodejs*"</span>, <span class="str">"*\npm*"</span>)
+<span class="fl">$pathArray</span>   = <span class="fl">$currentPath</span> -split <span class="str">";"</span> | <span class="fn">Where-Object</span> { <span class="fl">$_</span> -ne <span class="str">""</span> }
+
+<span class="kw">foreach</span> (<span class="fl">$pattern</span> <span class="kw">in</span> <span class="fl">$patterns</span>) {
+    <span class="fl">$pathArray</span> = <span class="kw">@</span>(<span class="fl">$pathArray</span> | <span class="fn">Where-Object</span> { <span class="fl">$_</span> -notlike <span class="fl">$pattern</span> })
+}
+
+<span class="kw">[Environment]</span>::SetEnvironmentVariable(<span class="str">"Path"</span>, (<span class="fl">$pathArray</span> -join <span class="str">";"</span>), <span class="str">"Machine"</span>)</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="8.5">
+        <div class="step-title">Remove environment variables & Git config</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Admin)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="kw">[Environment]</span>::SetEnvironmentVariable(<span class="str">"PYTHONUTF8"</span>, <span class="fl">$null</span>, <span class="str">"Machine"</span>)
+<span class="fn">git</span> config <span class="pm">--system --unset</span> core.autocrlf
+<span class="fn">git</span> config <span class="pm">--system --unset</span> init.defaultBranch</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 09 TROUBLESHOOT -->
+  <section class="section" id="troubleshoot">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2 class="section-title">Troubleshooting</h2>
+    </div>
+
+    <div class="trouble-list">
+
+      <div class="trouble-item">
+        <div class="trouble-q">"winget is not recognized"</div>
+        <div class="trouble-a">
+          On Windows 10, install <strong style="color:var(--text)">App Installer</strong> from the Microsoft Store. On Windows 11, it should be pre-installed — try opening a fresh PowerShell window and running <code style="color:var(--accent2)">winget</code> again.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">"Access denied" or "requires Administrator"</div>
+        <div class="trouble-a">
+          Right-click on PowerShell and select <strong style="color:var(--text)">Run as Administrator</strong>. System-level PATH changes and <code style="color:var(--accent2)">git config --system</code> require elevated privileges.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">Package "already installed" messages</div>
+        <div class="trouble-a">
+          This is expected and safe to ignore. winget simply skips packages that are already present. Exit code <code style="color:var(--accent2)">-1978335189</code> means "already installed."
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">Commands not found after installation</div>
+        <div class="trouble-a">
+          Close <strong style="color:var(--text)">all</strong> terminal windows and open a fresh one. PATH changes only take effect in new sessions. Alternatively, run the session-refresh commands from step 4.3 to update the current session immediately.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">npm install fails for Claude Code</div>
+        <div class="trouble-a">
+          Verify Node.js is installed: <code style="color:var(--accent2)">npm --version</code>. If you get permission errors, ensure you're in an Administrator PowerShell. You can also try clearing the npm cache first: <code style="color:var(--accent2)">npm cache clean --force</code>
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">Python encoding issues</div>
+        <div class="trouble-a">
+          Verify the variable is set: <code style="color:var(--accent2)">[Environment]::GetEnvironmentVariable("PYTHONUTF8", "Machine")</code> — it should return <code style="color:var(--accent)">1</code>. If it does and Python still misbehaves, restart your terminal to pick up the change.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">Git line ending issues</div>
+        <div class="trouble-a">
+          Verify the setting is applied: <code style="color:var(--accent2)">git config --system core.autocrlf</code> — should return <code style="color:var(--accent)">true</code>. This ensures consistent Windows line endings across all repositories.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>Vibe Coding Stack — <span>Windows Installation Guide</span></span>
+    <span style="color:var(--muted)">All commands require PowerShell as Administrator</span>
+  </footer>
+
+</main>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Highlight active nav item on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

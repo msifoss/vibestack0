@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding Stack — Quick Setup Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ─── PAGE-SPECIFIC: index.html ─── */
+  .hero {
+    text-align: center;
+  }
+
+  .hero::before {
+    top: -60px; left: 50%; right: auto;
+    transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(0,229,160,0.06) 0%, transparent 65%);
+  }
+
+  .hero-eyebrow {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px; height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  .hero-eyebrow::before { opacity: 0.5; }
+
+  .hero h1 {
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.08;
+  }
+
+  .hero-sub { margin: 0 auto 36px; }
+
+  .os-pick {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .os-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid;
+  }
+
+  .os-btn-win {
+    background: rgba(79,159,255,0.1);
+    border-color: rgba(79,159,255,0.35);
+    color: var(--accent2);
+  }
+
+  .os-btn-win:hover {
+    background: rgba(79,159,255,0.18);
+    border-color: var(--accent2);
+    transform: translateY(-2px);
+  }
+
+  .os-btn-mac {
+    background: rgba(0,229,160,0.1);
+    border-color: rgba(0,229,160,0.35);
+    color: var(--accent);
+  }
+
+  .os-btn-mac:hover {
+    background: rgba(0,229,160,0.18);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* ─── OS DIVIDER ─── */
+  .os-divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 64px;
+    margin: 0;
+  }
+
+  .os-divider-line { flex: 1; height: 1px; background: var(--border); }
+
+  .os-divider-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    border: 1px solid;
+  }
+
+  .os-divider-badge.win {
+    color: var(--accent-win);
+    border-color: rgba(79,159,255,0.3);
+    background: rgba(79,159,255,0.07);
+  }
+
+  .os-divider-badge.mac {
+    color: var(--accent-mac);
+    border-color: rgba(0,229,160,0.3);
+    background: rgba(0,229,160,0.07);
+  }
+
+  /* ─── SECTION override ─── */
+  .section { padding: 56px 64px; }
+
+  /* ─── BIG STEPS ─── */
+  .big-steps { display: flex; flex-direction: column; gap: 48px; margin-top: 8px; }
+
+  .big-step {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 0 28px;
+  }
+
+  .big-step-num-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .big-step-circle {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    flex-shrink: 0;
+    border: 2px solid;
+  }
+
+  .big-step-circle.win { color: var(--accent-win); border-color: rgba(79,159,255,0.4); background: rgba(79,159,255,0.08); }
+  .big-step-circle.mac { color: var(--accent-mac); border-color: rgba(0,229,160,0.4); background: rgba(0,229,160,0.08); }
+
+  .big-step-line {
+    width: 2px;
+    flex: 1;
+    min-height: 32px;
+    background: var(--border);
+    margin-top: 8px;
+  }
+
+  .big-step:last-child .big-step-line { display: none; }
+
+  .big-step-content { padding-top: 12px; padding-bottom: 24px; }
+
+  .big-step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .big-step-explain {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.75;
+    max-width: 640px;
+    margin-bottom: 18px;
+  }
+
+  .big-step-explain strong { color: var(--text); font-weight: 500; }
+
+  .screenshot-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .code-block { max-width: 680px; }
+  .callout { max-width: 640px; }
+
+  pre { padding: 18px 20px; line-height: 1.65; }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    max-width: 640px;
+    margin: 14px 0;
+  }
+
+  .progress-bar-label { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+  .progress-bar-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    animation: fillup 2.4s ease-in-out infinite alternate;
+  }
+
+  .progress-bar-fill.win { background: linear-gradient(90deg, var(--accent-win), #82cfff); }
+  .progress-bar-fill.mac { background: linear-gradient(90deg, var(--accent-mac), #82ffcc); }
+
+  @keyframes fillup { 0% { width: 15%; } 100% { width: 95%; } }
+
+  .progress-items { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+
+  .progress-item { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+
+  .progress-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .progress-dot.done.win { background: var(--accent-win); box-shadow: 0 0 6px var(--accent-win); }
+  .progress-dot.done.mac { background: var(--accent-mac); box-shadow: 0 0 6px var(--accent-mac); }
+
+  /* ─── DONE CARD ─── */
+  .done-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    max-width: 640px;
+    margin-top: 8px;
+  }
+
+  .done-icon { font-size: 32px; margin-bottom: 14px; }
+
+  .done-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .done-body { color: var(--muted); font-size: 13px; line-height: 1.75; }
+  .done-body strong { color: var(--text); font-weight: 500; }
+
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+
+  .check-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .check-list li::before {
+    content: '\2713';
+    font-size: 12px;
+    font-weight: 700;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .check-list.win li::before { color: var(--accent-win); background: rgba(79,159,255,0.12); }
+  .check-list.mac li::before { color: var(--accent-mac); background: rgba(0,229,160,0.12); }
+
+  /* ─── DOWNLOAD BUTTONS ─── */
+  .dl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 22px;
+    border-radius: 8px;
+    border: 1px solid;
+    text-decoration: none;
+    margin: 14px 0 20px;
+    transition: all 0.2s;
+    max-width: 540px;
+  }
+
+  .dl-btn:hover { transform: translateY(-2px); }
+
+  .dl-btn-win {
+    background: rgba(79,159,255,0.08);
+    border-color: rgba(79,159,255,0.3);
+    color: var(--accent2);
+  }
+
+  .dl-btn-win:hover { background: rgba(79,159,255,0.14); border-color: var(--accent2); }
+
+  .dl-btn-mac {
+    background: rgba(0,229,160,0.08);
+    border-color: rgba(0,229,160,0.3);
+    color: var(--accent);
+  }
+
+  .dl-btn-mac:hover { background: rgba(0,229,160,0.14); border-color: var(--accent); }
+
+  .dl-icon {
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .dl-label {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .dl-sub {
+    display: block;
+    font-size: 11px;
+    opacity: 0.6;
+    letter-spacing: 0.03em;
+  }
+
+  /* ─── UNBLOCK BOX ─── */
+  .unblock-box {
+    background: var(--surface);
+    border: 1px solid rgba(255,189,46,0.25);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 8px 0 0;
+    max-width: 680px;
+  }
+
+  .unblock-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fbbf24;
+    margin-bottom: 14px;
+  }
+
+  .unblock-method {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+
+  .unblock-method:last-child { margin-bottom: 0; }
+
+  .unblock-method-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .unblock-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    counter-reset: unblock-counter;
+  }
+
+  .unblock-steps li {
+    counter-increment: unblock-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .unblock-steps li::before {
+    content: counter(unblock-counter);
+    min-width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fbbf24;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .unblock-steps li strong { color: var(--text); }
+
+  /* ─── WHAT'S NEXT CARDS ─── */
+  .next-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .next-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .next-card:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+
+  .next-card-icon {
+    font-size: 22px;
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .next-card-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .next-card-desc {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 900px) {
+    .os-divider { padding: 0 24px; }
+    .big-step { grid-template-columns: 48px 1fr; gap: 0 16px; }
+    .section { padding: 40px 24px; }
+    .hero { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-tag">Quick Setup</div>
+    <div class="logo-name">Vibe<span>.</span>Stack</div>
+  </div>
+  <div class="nav-label">On this page</div>
+  <ul class="nav-list">
+    <li><a href="#start">Getting Started</a></li>
+  </ul>
+  <div class="nav-os-label win">⊞ Windows</div>
+  <ul class="nav-list">
+    <li><a href="#win-step1" class="win-link"><span class="nav-num">01</span> Download</a></li>
+    <li><a href="#win-step2" class="win-link"><span class="nav-num">02</span> Open PowerShell</a></li>
+    <li><a href="#win-step3" class="win-link"><span class="nav-num">03</span> Allow Scripts</a></li>
+    <li><a href="#win-step4" class="win-link"><span class="nav-num">04</span> Run It</a></li>
+    <li><a href="#win-step5" class="win-link"><span class="nav-num">05</span> Wait & Done</a></li>
+  </ul>
+  <div class="nav-os-label mac"> macOS</div>
+  <ul class="nav-list">
+    <li><a href="#mac-step1" class="mac-link"><span class="nav-num">01</span> Download</a></li>
+    <li><a href="#mac-step2" class="mac-link"><span class="nav-num">02</span> Open Terminal</a></li>
+    <li><a href="#mac-step3" class="mac-link"><span class="nav-num">03</span> Run It</a></li>
+    <li><a href="#mac-step4" class="mac-link"><span class="nav-num">04</span> Wait & Done</a></li>
+  </ul>
+  <div class="nav-label" style="margin-top:18px;">More Guides</div>
+  <ul class="nav-list">
+    <li><a href="github-setup.html">GitHub Setup</a></li>
+    <li><a href="claude-code-setup.html">Claude Code Setup</a></li>
+    <li><a href="install-guide-windows.html">Windows Install (detailed)</a></li>
+    <li><a href="install-guide-mac.html">macOS Install (detailed)</a></li>
+  </ul>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero" id="start">
+    <div class="hero-eyebrow">Quick Setup Guide</div>
+    <h1>Let's get your computer<br>ready to <em>start vibe coding.</em></h1>
+    <p class="hero-sub">
+      You're going to run a script — think of it like a <strong>to-do list for your computer.</strong>
+      You hit go, it does all the work, and you come back to a computer that's ready to code.
+      No experience needed.
+    </p>
+    <div class="os-pick">
+      <a href="#windows" class="os-btn os-btn-win">⊞ &nbsp;I have Windows</a>
+      <a href="#macos" class="os-btn os-btn-mac"> &nbsp;I have a Mac</a>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════
+       WINDOWS
+  ════════════════════════════════════ -->
+  <div id="windows">
+
+    <div class="os-divider" style="padding-top:48px; padding-bottom:48px;">
+      <div class="os-divider-line"></div>
+      <div class="os-divider-badge win">⊞ Windows</div>
+      <div class="os-divider-line"></div>
+    </div>
+
+    <section class="section">
+      <div class="big-steps">
+
+        <!-- STEP 1 -->
+        <div class="big-step" id="win-step1">
+          <div class="big-step-num-col">
+            <div class="big-step-circle win">1</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Download the script</div>
+            <p class="big-step-explain">
+              First, you need to grab the setup file. Click the button below to go to GitHub, then click the <strong>download</strong> icon (a little arrow pointing down) to save the file. Put it somewhere easy to find — like your <strong>Desktop</strong> or your <strong>Downloads</strong> folder.
+            </p>
+
+            <a href="https://github.com/msifoss/vibestack0/blob/master/VibeCodingStack-Windows.ps1" target="_blank" class="dl-btn dl-btn-win">
+              <span class="dl-icon">↓</span>
+              <span>
+                <span class="dl-label">Download for Windows</span>
+                <span class="dl-sub">VibeCodingStack-Windows.ps1 — github.com/msifoss/vibestack0</span>
+              </span>
+            </a>
+
+            <div class="callout callout-info">
+              <strong>What is this file?</strong>
+              It's called <code>VibeCodingStack-Windows.ps1</code> — a ".ps1" file is just a list of instructions for Windows to follow. It can't run by itself until you tell it to.
+            </div>
+            <div class="callout callout-warn">
+              <strong>⚠ Your browser might warn you</strong>
+              If it asks "Keep or Discard?" — click <strong>Keep</strong>. Windows is just being cautious about any file that does stuff automatically. It's safe.
+            </div>
+
+            <div class="unblock-box">
+              <div class="unblock-title">🔓 Important: Unblock the file after downloading</div>
+              <p class="big-step-explain" style="margin-bottom:12px;">
+                When Windows downloads a file from the internet, it quietly puts a little "lock" on it. You need to remove that lock before the script will run. You can do this in <strong>two ways</strong> — pick whichever feels easier:
+              </p>
+
+              <div class="unblock-method">
+                <div class="unblock-method-label">Option A — Right-click method (no typing needed)</div>
+                <ol class="unblock-steps">
+                  <li>Find the file in your Downloads or Desktop</li>
+                  <li><strong>Right-click</strong> the file and choose <strong>Properties</strong></li>
+                  <li>At the very bottom of the window, look for a checkbox that says <strong>"Unblock"</strong></li>
+                  <li>Check that box, then click <strong>Apply</strong>, then <strong>OK</strong></li>
+                </ol>
+              </div>
+
+              <div class="unblock-method">
+                <div class="unblock-method-label">Option B — PowerShell command (faster once you have it open)</div>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:8px;">If you saved the file to your Desktop, paste this into PowerShell (you'll open PowerShell in the next step — come back to this if needed):</p>
+                <div class="code-block" style="max-width:100%;">
+                  <div class="code-bar">
+                    <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                    <span>PowerShell (Admin)</span>
+                    <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                  </div>
+                  <pre>Unblock-File "$env:USERPROFILE\Desktop\VibeCodingStack-Windows.ps1"</pre>
+                </div>
+                <p style="color:var(--muted); font-size:13px; margin-top:4px;">Or if you saved it to Downloads:</p>
+                <div class="code-block" style="max-width:100%;">
+                  <div class="code-bar">
+                    <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                    <span>PowerShell (Admin)</span>
+                    <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                  </div>
+                  <pre>Unblock-File "$env:USERPROFILE\Downloads\VibeCodingStack-Windows.ps1"</pre>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="big-step" id="win-step2">
+          <div class="big-step-num-col">
+            <div class="big-step-circle win">2</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Open PowerShell as Administrator</div>
+            <p class="big-step-explain">
+              PowerShell is like a text-based control panel for your computer. We need to open it in a special way — as <strong>Administrator</strong> — so it has permission to install things. Think of it like needing a manager's key to stock the shelves.
+            </p>
+
+            <p class="big-step-explain" style="margin-bottom:6px;">Here's exactly how to do it:</p>
+
+            <div class="callout callout-info" style="margin-top:0;">
+              <strong>Step by step:</strong>
+              Press the <kbd>Windows</kbd> key on your keyboard to open the Start menu. Type the word <strong>PowerShell</strong>. You'll see "Windows PowerShell" appear. <strong>Right-click</strong> on it. A menu pops up — click <strong>"Run as administrator."</strong> A blue window will open. That's it!
+            </div>
+
+            <div class="callout callout-warn">
+              <strong>⚠ A pop-up may appear</strong>
+              Windows might ask "Do you want to allow this app to make changes to your device?" Click <strong>Yes</strong>. This is normal — it's just double-checking that you meant to open it as admin.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="big-step" id="win-step3">
+          <div class="big-step-num-col">
+            <div class="big-step-circle win">3</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Unlock scripts so they can run</div>
+            <p class="big-step-explain">
+              By default, Windows won't run scripts from the internet — it's a safety feature. We need to temporarily unlock this, just for our script. It's like turning off the child lock to do something you're allowed to do.
+            </p>
+            <p class="big-step-explain">
+              In the blue PowerShell window, <strong>click once</strong> to make sure it's selected, then <strong>copy and paste</strong> the text below and hit <kbd>Enter</kbd>:
+            </p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>PowerShell (Admin) — paste this, hit Enter</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</pre>
+            </div>
+            <p class="big-step-explain">
+              PowerShell might ask you to confirm. If it shows a prompt, type the letter <strong>Y</strong> and press <kbd>Enter</kbd>.
+            </p>
+            <div class="callout callout-good">
+              <strong>🔒 Is this safe?</strong>
+              Yes. "RemoteSigned" means Windows will still check that scripts from the internet have a trusted signature — it just stops blocking them completely. We're not turning security off, just turning it down from "maximum caution" to "normal."
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="big-step" id="win-step4">
+          <div class="big-step-num-col">
+            <div class="big-step-circle win">4</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Run the script</div>
+            <p class="big-step-explain">
+              Now we tell PowerShell where the script is and ask it to run. The easiest way is to <strong>navigate to the folder where you saved the file</strong> first. If you saved it to your Desktop, paste this:
+            </p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>PowerShell (Admin) — go to your Desktop</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>cd "$env:USERPROFILE\Desktop"</pre>
+            </div>
+            <p class="big-step-explain">If you saved it to Downloads instead, use this:</p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>PowerShell (Admin) — go to Downloads</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>cd "$env:USERPROFILE\Downloads"</pre>
+            </div>
+            <p class="big-step-explain">Then run the script:</p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>PowerShell (Admin) — run it!</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>.\VibeCodingStack-Windows.ps1</pre>
+            </div>
+            <div class="callout callout-warn">
+              <strong>⚠ Another pop-up?</strong>
+              If Windows shows a blue "SmartScreen" warning saying it's from an unknown publisher, click <strong>"More info"</strong>, then <strong>"Run anyway."</strong> This happens because the script is new and hasn't been downloaded by millions of people yet.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="big-step" id="win-step5">
+          <div class="big-step-num-col">
+            <div class="big-step-circle win">5</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Wait for it to finish — then you're done!</div>
+            <p class="big-step-explain">
+              The script is now running. It's downloading and installing everything automatically. You'll see text scrolling in the window — that's totally normal. It's just your computer narrating what it's doing.
+            </p>
+
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-label">Installing tools... (this is what it looks like)</div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill win" style="width:72%"></div>
+              </div>
+              <div class="progress-items">
+                <div class="progress-item"><span class="progress-dot done win"></span> Visual Studio Code — installed</div>
+                <div class="progress-item"><span class="progress-dot done win"></span> Git for Windows — installed</div>
+                <div class="progress-item"><span class="progress-dot done win"></span> Python 3.12 — installed</div>
+                <div class="progress-item"><span class="progress-dot done win"></span> Node.js — installed</div>
+                <div class="progress-item"><span class="progress-dot win" style="background:rgba(79,159,255,0.3)"></span> Claude Code — installing...</div>
+              </div>
+            </div>
+
+            <div class="callout callout-tip">
+              <strong>💡 How long will it take?</strong>
+              Usually <strong>10–20 minutes</strong> depending on your internet speed. The script might pause for a bit between installs — that's normal, not frozen. As long as the cursor is blinking or text is moving, it's working.
+            </div>
+
+            <div class="callout callout-warn">
+              <strong>If it asks you a Yes/No question</strong>
+              Sometimes an installer will ask you something. When in doubt, press <kbd>Y</kbd> then <kbd>Enter</kbd> to say yes, or just <kbd>Enter</kbd> to accept the default.
+            </div>
+
+            <p class="big-step-explain" style="margin-top:16px;">
+              When it's done, you'll see a message saying the installation is complete. Then you can close the PowerShell window.
+            </p>
+
+            <div class="done-card">
+              <div class="done-icon">🎉</div>
+              <div class="done-title">You're all set!</div>
+              <div class="done-body">
+                Your computer now has everything it needs. Here's what got installed:
+                <ul class="check-list win">
+                  <li>VS Code — a code editor (like Word, but for code)</li>
+                  <li>Git — saves your work like a time machine</li>
+                  <li>GitHub CLI — uploads your work to the internet</li>
+                  <li>Python — a programming language</li>
+                  <li>Node.js — another programming language runtime</li>
+                  <li>Claude Code — your AI coding assistant</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+  <!-- END WINDOWS -->
+
+
+  <!-- ════════════════════════════════════
+       MACOS
+  ════════════════════════════════════ -->
+  <div id="macos">
+
+    <div class="os-divider" style="padding-top:48px; padding-bottom:48px;">
+      <div class="os-divider-line"></div>
+      <div class="os-divider-badge mac"> macOS</div>
+      <div class="os-divider-line"></div>
+    </div>
+
+    <section class="section">
+      <div class="big-steps">
+
+        <!-- STEP 1 -->
+        <div class="big-step" id="mac-step1">
+          <div class="big-step-num-col">
+            <div class="big-step-circle mac">1</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Download the script</div>
+            <p class="big-step-explain">
+              First, grab the setup file. Click the button below to go to GitHub, then click the <strong>download</strong> icon to save the file. Your <strong>Desktop</strong> or <strong>Downloads</strong> folder both work great.
+            </p>
+
+            <a href="https://github.com/msifoss/vibestack0/blob/master/VibeCodingStack-Mac.sh" target="_blank" class="dl-btn dl-btn-mac">
+              <span class="dl-icon">↓</span>
+              <span>
+                <span class="dl-label">Download for Mac</span>
+                <span class="dl-sub">VibeCodingStack-Mac.sh — github.com/msifoss/vibestack0</span>
+              </span>
+            </a>
+
+            <div class="callout callout-info">
+              <strong>What is this file?</strong>
+              It's called <code>VibeCodingStack-Mac.sh</code> — a ".sh" file is a shell script, which is just a text file full of commands. Your Mac knows how to read and run it. It won't do anything until you tell it to.
+            </div>
+            <div class="callout callout-warn">
+              <strong>⚠ macOS might flag the download</strong>
+              If Safari says the file "can't be opened because it is from an unidentified developer," don't worry — we'll handle that in the next steps.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="big-step" id="mac-step2">
+          <div class="big-step-num-col">
+            <div class="big-step-circle mac">2</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Open Terminal</div>
+            <p class="big-step-explain">
+              Terminal is your Mac's text-based control center. It lets you type commands directly to your computer — like texting instructions instead of clicking buttons.
+            </p>
+
+            <div class="callout callout-info">
+              <strong>How to open Terminal:</strong>
+              Press <kbd>⌘ Command</kbd> + <kbd>Space</kbd> to open Spotlight Search. Type the word <strong>Terminal</strong> and press <kbd>Enter</kbd>. A white (or black) window opens with a blinking cursor. That's Terminal — you're in!
+            </div>
+
+            <p class="big-step-explain">
+              Alternatively, open <strong>Finder</strong>, go to <strong>Applications → Utilities → Terminal</strong>.
+            </p>
+
+            <div class="callout callout-tip">
+              <strong>💡 First time?</strong>
+              Terminal can look intimidating but you only need to know one thing: you type a command and press <kbd>Enter</kbd> to run it. That's it.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="big-step" id="mac-step3">
+          <div class="big-step-num-col">
+            <div class="big-step-circle mac">3</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Run the script</div>
+            <p class="big-step-explain">
+              We need to do two things: first, tell your Mac the script is allowed to run, then actually run it. Both are one command each.
+            </p>
+
+            <p class="big-step-explain"><strong>First,</strong> navigate to where you saved the file. If it's in Downloads:</p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>Terminal — go to Downloads</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>cd ~/Downloads</pre>
+            </div>
+            <p class="big-step-explain">If it's on your Desktop:</p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>Terminal — go to Desktop</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>cd ~/Desktop</pre>
+            </div>
+
+            <p class="big-step-explain" style="margin-top:20px;"><strong>Second,</strong> give the script permission to run. Think of this like telling your Mac "yes, I trust this file":</p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>Terminal — unlock the script</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>chmod +x VibeCodingStack-Mac.sh</pre>
+            </div>
+
+            <p class="big-step-explain" style="margin-top:20px;"><strong>Third,</strong> run it!</p>
+            <div class="code-block">
+              <div class="code-bar">
+                <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+                <span>Terminal — run it!</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+              </div>
+              <pre>./VibeCodingStack-Mac.sh</pre>
+            </div>
+
+            <div class="callout callout-warn">
+              <strong>⚠ macOS Gatekeeper pop-up</strong>
+              If a pop-up says the script "cannot be opened because the developer cannot be verified", go to <strong>System Settings → Privacy & Security</strong>, scroll down, and click <strong>"Allow Anyway"</strong> next to the script name. Then try running it again.
+            </div>
+
+            <div class="callout callout-info">
+              <strong>It may ask for your Mac password</strong>
+              If Terminal asks for your password, type it and press <kbd>Enter</kbd>. You won't see any letters appear as you type — that's normal, it's hidden for security. Just type it and hit Enter.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="big-step" id="mac-step4">
+          <div class="big-step-num-col">
+            <div class="big-step-circle mac">4</div>
+            <div class="big-step-line"></div>
+          </div>
+          <div class="big-step-content">
+            <div class="big-step-title">Wait for it to finish — then you're done!</div>
+            <p class="big-step-explain">
+              The script is now running. Your Mac is downloading and installing everything by itself. You'll see a stream of text in Terminal — that's just your Mac explaining what it's doing. You don't need to read or understand it.
+            </p>
+
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-label">Installing tools... (this is what it looks like)</div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill mac" style="width:65%"></div>
+              </div>
+              <div class="progress-items">
+                <div class="progress-item"><span class="progress-dot done mac"></span> Homebrew — installed</div>
+                <div class="progress-item"><span class="progress-dot done mac"></span> Visual Studio Code — installed</div>
+                <div class="progress-item"><span class="progress-dot done mac"></span> Git — installed</div>
+                <div class="progress-item"><span class="progress-dot mac" style="background:rgba(0,229,160,0.3)"></span> Python 3.12 — installing...</div>
+                <div class="progress-item"><span class="progress-dot mac" style="background:var(--border)"></span> Node.js — waiting</div>
+                <div class="progress-item"><span class="progress-dot mac" style="background:var(--border)"></span> Claude Code — waiting</div>
+              </div>
+            </div>
+
+            <div class="callout callout-tip">
+              <strong>💡 How long will it take?</strong>
+              Usually <strong>15–30 minutes</strong>. Homebrew (the tool that installs everything on Mac) can take a while the first time. As long as text is appearing or the cursor is blinking, it's working.
+            </div>
+
+            <div class="callout callout-warn">
+              <strong>If it asks "Install Xcode Command Line Tools?"</strong>
+              Click <strong>Install</strong> and wait. This is a free Apple tool that Homebrew needs. It's totally official and comes straight from Apple.
+            </div>
+
+            <div class="callout callout-warn">
+              <strong>If it asks you Yes/No questions</strong>
+              Press <kbd>Y</kbd> then <kbd>Enter</kbd> to say yes, or just <kbd>Enter</kbd> to accept the default answer.
+            </div>
+
+            <p class="big-step-explain" style="margin-top:16px;">
+              When the script finishes, you'll see a completion message and the normal Terminal prompt comes back. That means you're done — close Terminal!
+            </p>
+
+            <div class="done-card">
+              <div class="done-icon">🎉</div>
+              <div class="done-title">You're all set!</div>
+              <div class="done-body">
+                Your Mac now has everything it needs. Here's what got installed:
+                <ul class="check-list mac">
+                  <li>Homebrew — a tool that installs other tools</li>
+                  <li>VS Code — a code editor (like Word, but for code)</li>
+                  <li>Git — saves your work like a time machine</li>
+                  <li>GitHub CLI — uploads your work to the internet</li>
+                  <li>Python — a programming language</li>
+                  <li>Node.js — another programming language runtime</li>
+                  <li>Claude Code — your AI coding assistant</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+  <!-- END MACOS -->
+
+  <!-- ════════════════════════════════════
+       WHAT'S NEXT
+  ════════════════════════════════════ -->
+  <section class="section" id="whats-next" style="padding:56px 64px;">
+    <div class="section-header">
+      <span class="section-num">→</span>
+      <h2 class="section-title">What's Next?</h2>
+    </div>
+    <p style="color:var(--muted); font-size:14px; max-width:600px; margin-bottom:8px;">
+      Your tools are installed. Now set up your accounts and learn the workflow.
+    </p>
+    <div class="next-grid">
+      <a href="github-setup.html" class="next-card">
+        <span class="next-card-icon">⎇</span>
+        <span>
+          <span class="next-card-label">GitHub Setup</span>
+          <span class="next-card-desc">Account, SSH keys & VS Code Git workflow</span>
+        </span>
+      </a>
+      <a href="claude-code-setup.html" class="next-card">
+        <span class="next-card-icon">◆</span>
+        <span>
+          <span class="next-card-label">Claude Code Setup</span>
+          <span class="next-card-desc">Anthropic subscription & authentication</span>
+        </span>
+      </a>
+      <a href="install-guide-windows.html" class="next-card">
+        <span class="next-card-icon">⊞</span>
+        <span>
+          <span class="next-card-label">Windows Install Guide</span>
+          <span class="next-card-desc">Detailed manual installation reference</span>
+        </span>
+      </a>
+      <a href="install-guide-mac.html" class="next-card">
+        <span class="next-card-icon"></span>
+        <span>
+          <span class="next-card-label">macOS Install Guide</span>
+          <span class="next-card-desc">Detailed manual installation reference</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>Vibe Coding Stack — <span>Quick Setup Guide</span></span>
+    <span style="color:var(--muted)">You've got this 🚀</span>
+  </footer>
+
+</main>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // Active nav highlighting
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -75% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding Stack — macOS Installation Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ─── PAGE-SPECIFIC: macOS ─── */
+  .badge-amber { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+
+  /* ─── CHIP TOGGLE ─── */
+  .chip-toggle {
+    display: inline-flex;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 20px 0 8px;
+  }
+
+  .chip {
+    padding: 7px 18px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    letter-spacing: 0.04em;
+  }
+
+  .chip.active { background: var(--accent); color: var(--bg); font-weight: 600; }
+  .chip:not(.active):hover { color: var(--text); }
+
+  .chip-note { font-size: 12px; color: var(--muted); }
+
+  /* ─── ARCH SPLIT ─── */
+  .arch-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 14px 0;
+  }
+
+  .arch-pane {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .arch-label {
+    padding: 8px 14px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .arch-pane.silicon .arch-label { color: var(--accent); }
+  .arch-pane.intel   .arch-label { color: var(--accent2); }
+
+  .arch-pane pre { background: var(--code-bg); padding: 16px; font-size: 12px; }
+
+  @media (max-width: 900px) {
+    .arch-split { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-tag">Install Guide</div>
+    <div class="logo-name">Vibe<span>.</span>Stack</div>
+  </div>
+  <a href="index.html" class="nav-home">← Back to Home</a>
+  <div class="nav-label">Contents</div>
+  <ul class="nav-list">
+    <li><a href="#overview"><span class="nav-num">01</span> Overview</a></li>
+    <li><a href="#prerequisites"><span class="nav-num">02</span> Prerequisites</a></li>
+    <li><a href="#installation"><span class="nav-num">03</span> Installation</a></li>
+    <li><a href="#environment"><span class="nav-num">04</span> Environment</a></li>
+    <li><a href="#claude"><span class="nav-num">05</span> Claude Code</a></li>
+    <li><a href="#optional"><span class="nav-num">06</span> Optional Tools</a></li>
+    <li><a href="#extras"><span class="nav-num">07</span> Recommended Extras</a></li>
+    <li><a href="#verify"><span class="nav-num">08</span> Verification</a></li>
+    <li><a href="#uninstall"><span class="nav-num">09</span> Uninstallation</a></li>
+    <li><a href="#troubleshoot"><span class="nav-num">10</span> Troubleshooting</a></li>
+  </ul>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">macOS Installation</div>
+    <h1>Set up your<br><em>Vibe Coding Stack</em><br>on macOS.</h1>
+    <p style="color: var(--muted); max-width: 540px; font-size: 14px; margin-top: 12px;">
+      This guide walks through every step that <code style="color:var(--accent2)">VibeCodingStack-Mac.sh</code> automates — so you understand exactly what's being installed and why.
+    </p>
+    <div class="hero-meta">
+      <span class="badge badge-green"> macOS (all supported)</span>
+      <span class="badge badge-blue">⏱ 20–40 minutes</span>
+      <span class="badge badge-amber">🍺 Requires Homebrew</span>
+    </div>
+  </section>
+
+  <!-- 01 OVERVIEW -->
+  <section class="section" id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Overview</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">The following tools will be installed on your machine. Core tools are required; optional and extra tools enhance the experience.</p>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-icon">⬡</div>
+        <div class="tool-name">VS Code</div>
+        <div class="tool-purpose">Primary code editor</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">⎇</div>
+        <div class="tool-name">Git</div>
+        <div class="tool-purpose">Version control</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">◈</div>
+        <div class="tool-name">GitHub CLI</div>
+        <div class="tool-purpose">GitHub ops from terminal</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">↓</div>
+        <div class="tool-name">wget</div>
+        <div class="tool-purpose">File downloader</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🐍</div>
+        <div class="tool-name">Python 3.12</div>
+        <div class="tool-purpose">Python runtime</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">⬡</div>
+        <div class="tool-name">Node.js LTS (22)</div>
+        <div class="tool-purpose">JS runtime (needed for Claude Code)</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">◆</div>
+        <div class="tool-name">Claude Code</div>
+        <div class="tool-purpose">Anthropic's AI coding CLI</div>
+      </div>
+    </div>
+
+    <div class="grid-label">Optional</div>
+    <div class="tools-grid">
+      <div class="tool-card optional">
+        <div class="tool-icon">🔍</div>
+        <div class="tool-name">fd</div>
+        <div class="tool-purpose">Fast file finder · optional</div>
+      </div>
+      <div class="tool-card optional">
+        <div class="tool-icon">🖼</div>
+        <div class="tool-name">ImageOptim</div>
+        <div class="tool-purpose">Image optimizer · optional</div>
+      </div>
+    </div>
+
+    <div class="grid-label">Recommended Extras</div>
+    <div class="tools-grid">
+      <div class="tool-card extra">
+        <div class="tool-icon">{}</div>
+        <div class="tool-name">jq</div>
+        <div class="tool-purpose">JSON processor</div>
+      </div>
+      <div class="tool-card extra">
+        <div class="tool-icon">🌲</div>
+        <div class="tool-name">tree</div>
+        <div class="tool-purpose">Directory visualization</div>
+      </div>
+      <div class="tool-card extra">
+        <div class="tool-icon">⚡</div>
+        <div class="tool-name">ripgrep</div>
+        <div class="tool-purpose">Blazing-fast code search</div>
+      </div>
+      <div class="tool-card extra">
+        <div class="tool-icon">~</div>
+        <div class="tool-name">fzf</div>
+        <div class="tool-purpose">Fuzzy finder</div>
+      </div>
+      <div class="tool-card extra">
+        <div class="tool-icon">🌐</div>
+        <div class="tool-name">httpie</div>
+        <div class="tool-purpose">Human-friendly HTTP client</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 PREREQUISITES -->
+  <section class="section" id="prerequisites">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Prerequisites</h2>
+    </div>
+
+    <div class="steps">
+
+      <div class="step" data-n="→">
+        <div class="step-title">Apple Silicon vs Intel</div>
+        <p>Homebrew installs to different locations depending on your chip. Check which you have:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">uname</span> -m</pre>
+        </div>
+
+        <table>
+          <thead><tr><th></th><th>Apple Silicon (M1/M2/M3/M4)</th><th>Intel</th></tr></thead>
+          <tbody>
+            <tr><td>Homebrew prefix</td><td><code>/opt/homebrew</code></td><td><code>/usr/local</code></td></tr>
+            <tr><td>Result of uname -m</td><td><code>arm64</code></td><td><code>x86_64</code></td></tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:8px;">Where paths differ, this guide shows both. Use the tab toggle at the top of each step to switch.</p>
+      </div>
+
+      <div class="step" data-n="→">
+        <div class="step-title">Fix Git SSH Override (if applicable)</div>
+        <p>If Git is configured to rewrite HTTPS URLs to SSH, Homebrew's install and update commands will fail. Check for overrides first:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">git</span> config <span class="pm">--global --get-all</span> url.<span class="str">"git@github.com:"</span>.insteadOf
+<span class="fn">git</span> config <span class="pm">--global --get-all</span> url.<span class="str">"ssh://git@github.com/"</span>.insteadOf</pre>
+        </div>
+        <p>If either command returns output, remove the overrides:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">git</span> config <span class="pm">--global --unset-all</span> url.<span class="str">"git@github.com:"</span>.insteadOf
+<span class="fn">git</span> config <span class="pm">--global --unset-all</span> url.<span class="str">"ssh://git@github.com/"</span>.insteadOf</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 03 INSTALLATION -->
+  <section class="section" id="installation">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Step-by-Step Installation</h2>
+    </div>
+
+    <div class="steps">
+
+      <div class="step" data-n="3.1">
+        <div class="step-title">Install Homebrew</div>
+        <p>Homebrew is the package manager for macOS. Skip this step if you already have it.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre>/bin/bash -c <span class="str">"$(curl -fsSL --tlsv1.2 https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span></pre>
+        </div>
+        <div class="callout callout-info">
+          <strong>Apple Silicon only</strong>
+          After installation, add Homebrew to your PATH for the current session:
+          <code style="color:var(--accent)">eval "$(/opt/homebrew/bin/brew shellenv)"</code>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.2">
+        <div class="step-title">Update Homebrew</div>
+        <p>Ensures your formula index is up to date before installing anything.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> update <span class="pm">--force</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.3">
+        <div class="step-title">Install Visual Studio Code</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install <span class="pm">--cask</span> visual-studio-code</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.4">
+        <div class="step-title">Install Git</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install git</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.5">
+        <div class="step-title">Install GitHub CLI</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install gh</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.6">
+        <div class="step-title">Install wget</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install wget</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.7">
+        <div class="step-title">Install Python 3.12</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install python@3.12</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.8">
+        <div class="step-title">Install Node.js LTS</div>
+        <p>Node.js 22 is "keg-only" — not automatically linked into your PATH. You'll configure this permanently in step 4.4, but for the current session run the appropriate command now:</p>
+        <div class="arch-split">
+          <div class="arch-pane silicon">
+            <div class="arch-label"> Apple Silicon</div>
+            <pre><span class="fn">brew</span> install node@22
+<span class="fl">export</span> PATH=<span class="str">"/opt/homebrew/opt/node@22/bin:$PATH"</span></pre>
+          </div>
+          <div class="arch-pane intel">
+            <div class="arch-label">◻ Intel</div>
+            <pre><span class="fn">brew</span> install node@22
+<span class="fl">export</span> PATH=<span class="str">"/usr/local/opt/node@22/bin:$PATH"</span></pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04 ENVIRONMENT -->
+  <section class="section" id="environment">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Environment Configuration</h2>
+    </div>
+
+    <div class="steps">
+
+      <div class="step" data-n="4.1">
+        <div class="step-title">Determine your shell RC file</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">echo</span> <span class="fl">$SHELL</span></pre>
+        </div>
+        <table style="margin-top:14px;">
+          <thead><tr><th>Shell</th><th>RC File</th></tr></thead>
+          <tbody>
+            <tr><td>zsh <span style="color:var(--muted);font-size:11px">(default on modern macOS)</span></td><td><code>~/.zshrc</code></td></tr>
+            <tr><td>bash</td><td><code>~/.bash_profile</code></td></tr>
+            <tr><td>other</td><td><code>~/.profile</code></td></tr>
+          </tbody>
+        </table>
+        <div class="code-block" style="margin-top:14px;">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal — create file if needed</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">touch</span> ~/.zshrc  <span class="cm"># or ~/.bash_profile for bash</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.2">
+        <div class="step-title">Add Homebrew to PATH <span style="font-size:12px;color:var(--muted);font-weight:400">(Apple Silicon only)</span></div>
+        <p>Intel users can skip this — <code>/usr/local</code> is already on the default PATH.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal — Apple Silicon</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">echo</span> <span class="str">''</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'# Homebrew'</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'eval "$(/opt/homebrew/bin/brew shellenv)"'</span> >> ~/.zshrc</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.3">
+        <div class="step-title">Add Python 3.12 to PATH</div>
+        <div class="arch-split">
+          <div class="arch-pane silicon">
+            <div class="arch-label"> Apple Silicon</div>
+            <pre><span class="fn">echo</span> <span class="str">''</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'# Python 3.12'</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"'</span> >> ~/.zshrc</pre>
+          </div>
+          <div class="arch-pane intel">
+            <div class="arch-label">◻ Intel</div>
+            <pre><span class="fn">echo</span> <span class="str">''</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'# Python 3.12'</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'export PATH="/usr/local/opt/python@3.12/libexec/bin:$PATH"'</span> >> ~/.zshrc</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.4">
+        <div class="step-title">Add Node.js to PATH</div>
+        <div class="arch-split">
+          <div class="arch-pane silicon">
+            <div class="arch-label"> Apple Silicon</div>
+            <pre><span class="fn">echo</span> <span class="str">''</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'# Node.js'</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'export PATH="/opt/homebrew/opt/node@22/bin:$PATH"'</span> >> ~/.zshrc</pre>
+          </div>
+          <div class="arch-pane intel">
+            <div class="arch-label">◻ Intel</div>
+            <pre><span class="fn">echo</span> <span class="str">''</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'# Node.js'</span> >> ~/.zshrc
+<span class="fn">echo</span> <span class="str">'export PATH="/usr/local/opt/node@22/bin:$PATH"'</span> >> ~/.zshrc</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.5">
+        <div class="step-title">Configure Git</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">git</span> config <span class="pm">--global</span> init.defaultBranch main
+<span class="fn">git</span> config <span class="pm">--global</span> core.editor <span class="str">"code --wait"</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.6">
+        <div class="step-title">Apply changes</div>
+        <p>Restart your terminal, or reload the RC file immediately:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">source</span> ~/.zshrc  <span class="cm"># or source ~/.bash_profile for bash</span></pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 05 CLAUDE CODE -->
+  <section class="section" id="claude">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Claude Code Installation</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:580px;">Claude Code is Anthropic's AI-powered coding assistant. It's installed globally via npm, which comes bundled with Node.js.</p>
+
+    <div class="steps">
+      <div class="step" data-n="5.1">
+        <div class="step-title">Install via npm</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">npm</span> install <span class="pm">-g</span> <span class="str">@anthropic-ai/claude-code</span></pre>
+        </div>
+        <div class="callout callout-warn">
+          <strong>Do not use sudo</strong>
+          If you get permission errors, fix npm's directory instead — see the Troubleshooting section.
+        </div>
+      </div>
+
+      <div class="step" data-n="5.2">
+        <div class="step-title">Verify installation</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">claude</span> --version</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 OPTIONAL -->
+  <section class="section" id="optional">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Optional Packages</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px;">macOS equivalents to the optional Windows tools.</p>
+
+    <div class="steps">
+      <div class="step" data-n="6.1">
+        <div class="step-title">fd — Fast File Finder</div>
+        <p>A modern, fast alternative to <code>find</code>. The macOS equivalent of Everything Search.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install fd</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="6.2">
+        <div class="step-title">ImageOptim</div>
+        <p>Lossless image compression tool — reduces file sizes without quality loss.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install <span class="pm">--cask</span> imageoptim</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 EXTRAS -->
+  <section class="section" id="extras">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Recommended Extras</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:32px; font-size:13px;">Developer productivity tools. All installed via Homebrew formulae.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="7.1">
+        <div class="step-title">jq — JSON Processor</div>
+        <p>Parse, filter, and transform JSON directly from the command line.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install jq</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="7.2">
+        <div class="step-title">tree — Directory Visualization</div>
+        <p>Display directory structures as ASCII tree diagrams.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install tree</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="7.3">
+        <div class="step-title">ripgrep — Fast Code Search</div>
+        <p>Blazing-fast recursive search across your codebase. Invoked as <code style="color:var(--accent2)">rg</code>.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install ripgrep</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="7.4">
+        <div class="step-title">fzf — Fuzzy Finder</div>
+        <p>Interactive fuzzy search for files, command history, and more.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install fzf</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="7.5">
+        <div class="step-title">httpie — HTTP Client</div>
+        <p>A human-friendly HTTP client for testing APIs from the terminal.</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> install httpie</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 08 VERIFY -->
+  <section class="section" id="verify">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">Verification</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:20px; font-size:13px;">Restart your terminal (or run <code style="color:var(--accent2)">source ~/.zshrc</code>), then verify all core tools:</p>
+
+    <div class="code-block">
+      <div class="code-bar">
+        <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span>Terminal — new window</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="fn">code</span>    --version
+<span class="fn">git</span>     --version
+<span class="fn">gh</span>      --version
+<span class="fn">wget</span>    --version
+<span class="fn">python3</span> --version
+<span class="fn">node</span>    --version
+<span class="fn">claude</span>  --version</pre>
+    </div>
+
+    <div class="verify-grid">
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">code --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">git --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">gh --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">wget --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">python3 --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">node --version</span></div>
+      <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">claude --version</span></div>
+    </div>
+
+    <p style="color:var(--muted); margin-top:28px; margin-bottom:14px; font-size:13px;">Optional tools, if installed:</p>
+    <div class="code-block">
+      <div class="code-bar">
+        <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span>Terminal</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="fn">fd</span>   --version  <span class="cm"># if installed</span>
+<span class="fn">jq</span>   --version  <span class="cm"># if installed</span>
+<span class="fn">tree</span> --version  <span class="cm"># if installed</span>
+<span class="fn">rg</span>   --version  <span class="cm"># ripgrep</span>
+<span class="fn">fzf</span>  --version  <span class="cm"># if installed</span>
+<span class="fn">http</span> --version  <span class="cm"># httpie</span></pre>
+    </div>
+  </section>
+
+  <!-- 09 UNINSTALL -->
+  <section class="section" id="uninstall">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2 class="section-title">Uninstallation</h2>
+    </div>
+
+    <div class="callout callout-warn" style="margin-bottom:32px;">
+      <strong>Order matters</strong>
+      Uninstall Claude Code first while npm is still available, then remove the other packages.
+    </div>
+
+    <div class="steps">
+
+      <div class="step" data-n="9.1">
+        <div class="step-title">Uninstall Claude Code first</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">npm</span> uninstall <span class="pm">-g</span> <span class="str">@anthropic-ai/claude-code</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="9.2">
+        <div class="step-title">Uninstall recommended extras</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> uninstall jq ripgrep fzf httpie tree</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="9.3">
+        <div class="step-title">Uninstall optional packages</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> uninstall <span class="pm">--cask</span> imageoptim
+<span class="fn">brew</span> uninstall fd</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="9.4">
+        <div class="step-title">Uninstall core packages</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">brew</span> uninstall <span class="pm">--cask</span> visual-studio-code
+<span class="fn">brew</span> uninstall node@22 python@3.12 gh wget git</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="9.5">
+        <div class="step-title">Clean up shell configuration</div>
+        <p>Open your <code style="color:var(--accent2)">~/.zshrc</code> (or <code style="color:var(--accent2)">~/.bash_profile</code>) and remove these blocks:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Remove from ~/.zshrc</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="cm"># Homebrew</span>
+<span class="fn">eval</span> <span class="str">"$(/opt/homebrew/bin/brew shellenv)"</span>
+
+<span class="cm"># Python 3.12</span>
+<span class="fl">export</span> PATH=<span class="str">"/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"</span>
+
+<span class="cm"># Node.js</span>
+<span class="fl">export</span> PATH=<span class="str">"/opt/homebrew/opt/node@22/bin:$PATH"</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="9.6">
+        <div class="step-title">Remove Git configuration</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">git</span> config <span class="pm">--global --unset</span> init.defaultBranch
+<span class="fn">git</span> config <span class="pm">--global --unset</span> core.editor</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 10 TROUBLESHOOT -->
+  <section class="section" id="troubleshoot">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2 class="section-title">Troubleshooting</h2>
+    </div>
+
+    <div class="trouble-list">
+
+      <div class="trouble-item">
+        <div class="trouble-q">"brew: command not found"</div>
+        <div class="trouble-a">
+          Homebrew is not installed or not in your PATH. Install it via step 3.1. On Apple Silicon, make sure you've added the <code style="color:var(--accent2)">brew shellenv</code> line to your RC file (step 4.2).
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">"brew update" fails with "Permission denied (publickey)"</div>
+        <div class="trouble-a">
+          Git is configured to rewrite HTTPS URLs to SSH for GitHub. Follow the <strong style="color:var(--text)">Fix Git SSH Override</strong> steps in section 2 to remove those overrides.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">Homebrew doesn't recognize your macOS version</div>
+        <div class="trouble-a">
+          If <code style="color:var(--accent2)">brew config</code> shows "unsupported" or "unknown" for your macOS version, reinstall Homebrew using the same command from step 3.1, then run <code style="color:var(--accent2)">brew update --force</code>.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">Node.js / npm commands not found after installation</div>
+        <div class="trouble-a">
+          Node.js 22 is "keg-only" and not auto-linked. Make sure your PATH includes the Node.js bin directory permanently via step 4.4, and reload your shell with <code style="color:var(--accent2)">source ~/.zshrc</code>.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">Python command not found</div>
+        <div class="trouble-a">
+          Homebrew's Python 3.12 is keg-only. Follow step 4.3 to add it to your PATH. You can also try <code style="color:var(--accent2)">python3 --version</code> — Homebrew Python may only be available as <code>python3</code> before the PATH is configured.
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">npm install fails for Claude Code</div>
+        <div class="trouble-a">
+          Do <strong style="color:var(--text)">not</strong> use <code>sudo npm install</code>. Instead, fix npm's global directory permissions:
+          <div class="code-block" style="margin-top:10px;">
+            <div class="code-bar">
+              <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+              <span>Terminal</span>
+              <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="fn">mkdir</span> -p ~/.npm-global
+<span class="fn">npm</span> config set prefix <span class="str">'~/.npm-global'</span>
+<span class="fn">echo</span> <span class="str">'export PATH="$HOME/.npm-global/bin:$PATH"'</span> >> ~/.zshrc
+<span class="fn">source</span> ~/.zshrc</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="trouble-item">
+        <div class="trouble-q">"code" command not found after installing VS Code</div>
+        <div class="trouble-a">
+          Open VS Code manually, press <code style="color:var(--accent2)">Cmd+Shift+P</code>, type "shell command", and select <strong style="color:var(--text)">Shell Command: Install 'code' command in PATH</strong>.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>Vibe Coding Stack — <span>macOS Installation Guide</span></span>
+    <span style="color:var(--muted)">Requires Homebrew · Terminal.app or compatible emulator</span>
+  </footer>
+
+</main>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

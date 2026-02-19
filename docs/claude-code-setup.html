@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding Stack — Claude Code Setup Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-tag">Claude Code</div>
+    <div class="logo-name">Vibe<span>.</span>Stack</div>
+  </div>
+  <a href="index.html" class="nav-home">← Back to Home</a>
+  <div class="nav-label">Contents</div>
+  <ul class="nav-list">
+    <li><a href="#create-account"><span class="nav-num">01</span> Create Account</a></li>
+    <li><a href="#subscribe"><span class="nav-num">02</span> Subscribe</a></li>
+    <li><a href="#authenticate"><span class="nav-num">03</span> Authenticate</a></li>
+    <li><a href="#verify"><span class="nav-num">04</span> Verify</a></li>
+  </ul>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Claude Code Setup</div>
+    <h1>Connect Claude Code<br>to <em>your account.</em></h1>
+    <p style="color: var(--muted); max-width: 540px; font-size: 14px; margin-top: 12px;">
+      Create an Anthropic account, subscribe to Claude, and authenticate Claude Code in your terminal — so you can start vibe coding with AI.
+    </p>
+    <div class="hero-meta">
+      <span class="badge badge-green">◆ Claude Code</span>
+      <span class="badge badge-blue">⏱ 5–10 minutes</span>
+    </div>
+  </section>
+
+  <!-- 01 CREATE ACCOUNT -->
+  <section class="section" id="create-account">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Create an Anthropic Account</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">Anthropic is the company that makes Claude. You need a free account to get started.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="1.1">
+        <div class="step-title">Go to claude.ai</div>
+        <p>Open your browser and go to <strong style="color:var(--text)">claude.ai</strong>. Click <strong style="color:var(--text)">Sign up</strong>.</p>
+      </div>
+
+      <div class="step" data-n="1.2">
+        <div class="step-title">Sign up</div>
+        <p>You can sign up with your <strong style="color:var(--text)">Google account</strong> or with an <strong style="color:var(--text)">email and password</strong>. Either works — pick whichever is easier for you.</p>
+      </div>
+
+      <div class="step" data-n="1.3">
+        <div class="step-title">Verify your email</div>
+        <p>If you signed up with email, check your inbox for a verification email from Anthropic. Click the link to verify your account.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 02 SUBSCRIBE -->
+  <section class="section" id="subscribe">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Subscribe to Claude</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">Claude Code requires a paid subscription to use. A subscription gives you access to Claude Code directly through your account — no API keys needed.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="2.1">
+        <div class="step-title">Choose your plan</div>
+        <p>Go to your Claude settings and choose a subscription tier. Here's what's available:</p>
+
+        <table style="max-width:540px;">
+          <thead><tr><th>Plan</th><th>Claude Code Access</th><th>Best For</th></tr></thead>
+          <tbody>
+            <tr><td>Pro ($20/mo)</td><td>Included</td><td>Getting started, light usage</td></tr>
+            <tr><td>Max ($100/mo)</td><td>Included, higher limits</td><td>Heavy daily usage</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-tip">
+          <strong>Start with Pro</strong>
+          The Pro plan is great for getting started. You can always upgrade to Max later if you find yourself hitting usage limits.
+        </div>
+      </div>
+
+      <div class="step" data-n="2.2">
+        <div class="step-title">Subscribe</div>
+        <p>On <strong style="color:var(--text)">claude.ai</strong>, click your name or profile icon, then go to <strong style="color:var(--text)">Settings → Subscription</strong>. Choose a plan and enter your payment details.</p>
+      </div>
+
+      <div class="step" data-n="2.3">
+        <div class="step-title">Alternative: API keys (advanced)</div>
+        <p>If you prefer usage-based pricing instead of a subscription, you can use API keys. This is more complex and typically used by developers who want fine-grained control over costs.</p>
+        <div class="callout callout-info">
+          <strong>API key setup</strong>
+          For API key setup, see the <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching" style="color:var(--accent2)">Anthropic API documentation</a>. You'll need to create an API key at <strong style="color:var(--text)">console.anthropic.com</strong> and add billing credits. Most beginners should use the subscription method above instead.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 03 AUTHENTICATE -->
+  <section class="section" id="authenticate">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Authenticate Claude Code</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">Now that you have a subscription, let's connect Claude Code to your account. This uses a simple browser-based login — no API keys to copy or paste.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="3.1">
+        <div class="step-title">Open your terminal in VS Code</div>
+        <p>Open VS Code, then open the integrated terminal:</p>
+        <div class="callout callout-info">
+          <strong>How to open the terminal</strong>
+          Press <kbd>Ctrl+`</kbd> (Windows) or <kbd>⌘+`</kbd> (Mac) — that's the backtick key, usually above <kbd>Tab</kbd>. A terminal panel opens at the bottom of VS Code.
+        </div>
+      </div>
+
+      <div class="step" data-n="3.2">
+        <div class="step-title">Run the claude command</div>
+        <p>Type <code style="color:var(--accent2)">claude</code> and press <kbd>Enter</kbd>:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal (in VS Code)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">claude</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.3">
+        <div class="step-title">Follow the OAuth flow</div>
+        <p>Claude Code will detect that you're not logged in and start the authentication process:</p>
+        <div class="callout callout-info">
+          <strong>What happens</strong>
+          1. Claude Code prints a message saying it needs to authenticate<br>
+          2. Your <strong style="color:var(--text)">browser opens automatically</strong> to an Anthropic login page<br>
+          3. Log in with the same account you subscribed with<br>
+          4. Click <strong style="color:var(--text)">Allow</strong> to authorize Claude Code<br>
+          5. The browser shows a success message — you can close the tab<br>
+          6. Back in your terminal, Claude Code confirms it's authenticated
+        </div>
+        <div class="callout callout-warn">
+          <strong>Browser didn't open?</strong>
+          If your browser doesn't open automatically, Claude Code will display a URL in the terminal. Copy that URL and paste it into your browser manually.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04 VERIFY -->
+  <section class="section" id="verify">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Verify It Works</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">Let's make sure everything is connected and working.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="4.1">
+        <div class="step-title">Check the version</div>
+        <p>Confirm Claude Code is installed and accessible:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">claude</span> --version</pre>
+        </div>
+        <p>This should print a version number like <code style="color:var(--accent2)">1.x.x</code>.</p>
+      </div>
+
+      <div class="step" data-n="4.2">
+        <div class="step-title">Try a simple prompt</div>
+        <p>Test that Claude Code can communicate with the API:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">claude</span> <span class="str">"Say hello in one sentence"</span></pre>
+        </div>
+        <p>Claude should respond with a friendly greeting. If you see a response, you're fully connected!</p>
+      </div>
+
+      <div class="step" data-n="4.3">
+        <div class="step-title">Start coding with Claude</div>
+        <p>You're all set. Here's how to use Claude Code in your projects:</p>
+        <div class="callout callout-tip">
+          <strong>Quick reference</strong>
+          <strong style="color:var(--text)">Interactive mode:</strong> Run <code style="color:var(--accent2)">claude</code> in your project folder to start a conversation<br>
+          <strong style="color:var(--text)">One-shot:</strong> Run <code style="color:var(--accent2)">claude "your question here"</code> for quick answers<br>
+          <strong style="color:var(--text)">Help:</strong> Run <code style="color:var(--accent2)">claude --help</code> to see all available commands
+        </div>
+
+        <div class="verify-grid" style="margin-top:24px;">
+          <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">claude --version</span></div>
+          <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">claude "hello"</span></div>
+          <div class="verify-item"><span class="verify-dot"></span><span class="verify-cmd">claude --help</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>Vibe Coding Stack — <span>Claude Code Setup Guide</span></span>
+    <span style="color:var(--muted)">You're ready to vibe code 🚀</span>
+  </footer>
+
+</main>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

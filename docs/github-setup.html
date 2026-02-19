@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding Stack — GitHub Setup Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-tag">GitHub Setup</div>
+    <div class="logo-name">Vibe<span>.</span>Stack</div>
+  </div>
+  <a href="index.html" class="nav-home">← Back to Home</a>
+  <div class="nav-label">Contents</div>
+  <ul class="nav-list">
+    <li><a href="#create-account"><span class="nav-num">01</span> Create Account</a></li>
+    <li><a href="#ssh-keys"><span class="nav-num">02</span> SSH Keys</a></li>
+    <li><a href="#vscode-github"><span class="nav-num">03</span> VS Code + GitHub</a></li>
+    <li><a href="#first-repo"><span class="nav-num">04</span> Your First Repo</a></li>
+    <li><a href="#commit-push"><span class="nav-num">05</span> Commit & Push</a></li>
+  </ul>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">GitHub Setup</div>
+    <h1>Connect to GitHub<br>and start <em>pushing code.</em></h1>
+    <p style="color: var(--muted); max-width: 540px; font-size: 14px; margin-top: 12px;">
+      Create a GitHub account, set up SSH keys for secure access, and learn the Git workflow in VS Code — from your first repo to your first push.
+    </p>
+    <div class="hero-meta">
+      <span class="badge badge-green">⎇ Git + GitHub</span>
+      <span class="badge badge-blue">⏱ 15–25 minutes</span>
+    </div>
+  </section>
+
+  <!-- 01 CREATE ACCOUNT -->
+  <section class="section" id="create-account">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Create a GitHub Account</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">GitHub is where your code lives on the internet. It's free, and you'll use it to back up your projects and collaborate with others (including AI assistants).</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="1.1">
+        <div class="step-title">Go to GitHub</div>
+        <p>Open your browser and go to <strong style="color:var(--text)">github.com</strong>. Click <strong style="color:var(--text)">Sign up</strong> in the top-right corner.</p>
+      </div>
+
+      <div class="step" data-n="1.2">
+        <div class="step-title">Choose a username</div>
+        <p>Pick something professional-ish — this will be part of your profile URL (e.g., <code style="color:var(--accent2)">github.com/your-username</code>). You can always change it later, but it's easier to pick a good one now.</p>
+        <div class="callout callout-tip">
+          <strong>Username tips</strong>
+          Keep it short, lowercase, and easy to type. Avoid special characters. Something like your name or a consistent handle works great.
+        </div>
+      </div>
+
+      <div class="step" data-n="1.3">
+        <div class="step-title">Enter your email and password</div>
+        <p>Use a real email you check — GitHub will send you a verification code. Choose a strong password.</p>
+      </div>
+
+      <div class="step" data-n="1.4">
+        <div class="step-title">Verify your email</div>
+        <p>Check your inbox for a verification email from GitHub. Click the link or enter the code they sent. Once verified, your account is ready.</p>
+      </div>
+
+      <div class="step" data-n="1.5">
+        <div class="step-title">Configure your Git identity</div>
+        <p>Tell Git who you are — this info shows up on your commits. Replace the name and email with your own:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">git</span> config <span class="pm">--global</span> user.name <span class="str">"Your Name"</span>
+<span class="fn">git</span> config <span class="pm">--global</span> user.email <span class="str">"your-email@example.com"</span></pre>
+        </div>
+        <div class="callout callout-info">
+          <strong>Use the same email</strong>
+          Use the same email you signed up with on GitHub. This links your local commits to your GitHub profile.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 02 SSH KEYS -->
+  <section class="section" id="ssh-keys">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Set Up SSH Keys</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">SSH keys let your computer prove its identity to GitHub without typing your password every time. Think of it as a digital handshake — your computer has a private key, and GitHub has the matching public key.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="2.1">
+        <div class="step-title">Check for existing SSH keys</div>
+        <p>You might already have one. Let's check first:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">ls</span> -la ~/.ssh</pre>
+        </div>
+        <p>If you see files like <code style="color:var(--accent2)">id_ed25519</code> and <code style="color:var(--accent2)">id_ed25519.pub</code>, you already have a key pair — skip to step 2.3. If the folder doesn't exist or is empty, continue to the next step.</p>
+      </div>
+
+      <div class="step" data-n="2.2">
+        <div class="step-title">Generate a new SSH key pair</div>
+        <p>Replace the email with the one you used for GitHub:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">ssh-keygen</span> -t ed25519 -C <span class="str">"your-email@example.com"</span></pre>
+        </div>
+        <p>It will ask you a few things:</p>
+        <div class="callout callout-info">
+          <strong>What to type</strong>
+          <strong style="color:var(--text)">"Enter file in which to save the key"</strong> — press <kbd>Enter</kbd> to accept the default location.<br>
+          <strong style="color:var(--text)">"Enter passphrase"</strong> — you can press <kbd>Enter</kbd> for no passphrase (simpler), or type one for extra security.
+        </div>
+      </div>
+
+      <div class="step" data-n="2.3">
+        <div class="step-title">Add your key to the ssh-agent</div>
+        <p>Start the SSH agent and add your key so it's ready to use:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal (macOS)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">eval</span> <span class="str">"$(ssh-agent -s)"</span>
+<span class="fn">ssh-add</span> ~/.ssh/id_ed25519</pre>
+        </div>
+        <div class="callout callout-tip">
+          <strong>On macOS</strong>
+          You can add <code style="color:var(--accent2)">--apple-use-keychain</code> to the ssh-add command to store the passphrase in your macOS Keychain so you don't have to type it again.
+        </div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Windows)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="cm"># Start the ssh-agent service</span>
+<span class="fn">Get-Service</span> ssh-agent | <span class="fn">Set-Service</span> -StartupType Automatic
+<span class="fn">Start-Service</span> ssh-agent
+<span class="fn">ssh-add</span> $env:USERPROFILE\.ssh\id_ed25519</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="2.4">
+        <div class="step-title">Copy your public key</div>
+        <p>Copy the public key to your clipboard. This is the key you'll give to GitHub — never share your private key (the file without <code>.pub</code>).</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal (macOS)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">pbcopy</span> < ~/.ssh/id_ed25519.pub</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>PowerShell (Windows)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">Get-Content</span> $env:USERPROFILE\.ssh\id_ed25519.pub | <span class="fn">Set-Clipboard</span></pre>
+        </div>
+        <p>The key is now in your clipboard — it starts with <code style="color:var(--accent2)">ssh-ed25519</code>.</p>
+      </div>
+
+      <div class="step" data-n="2.5">
+        <div class="step-title">Add the key to GitHub</div>
+        <p>Now paste it into your GitHub account:</p>
+        <div class="callout callout-info">
+          <strong>Step by step</strong>
+          1. Go to <strong style="color:var(--text)">github.com</strong> and click your profile picture (top-right) → <strong style="color:var(--text)">Settings</strong><br>
+          2. In the left sidebar, click <strong style="color:var(--text)">SSH and GPG keys</strong><br>
+          3. Click <strong style="color:var(--text)">New SSH key</strong><br>
+          4. Give it a title (e.g., "My Laptop") and paste the key into the "Key" field<br>
+          5. Click <strong style="color:var(--text)">Add SSH key</strong>
+        </div>
+      </div>
+
+      <div class="step" data-n="2.6">
+        <div class="step-title">Test the connection</div>
+        <p>Verify everything works:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">ssh</span> -T git@github.com</pre>
+        </div>
+        <p>If it asks "Are you sure you want to continue connecting?" type <strong style="color:var(--text)">yes</strong> and hit <kbd>Enter</kbd>.</p>
+        <div class="callout callout-tip">
+          <strong>Success looks like</strong>
+          <code style="color:var(--accent)">Hi your-username! You've successfully authenticated, but GitHub does not provide shell access.</code> — this means it worked!
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 03 VSCODE + GITHUB -->
+  <section class="section" id="vscode-github">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Connect VS Code to GitHub</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">VS Code has built-in Git support and a GitHub extension. Let's connect them so you can manage your code right from the editor.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="3.1">
+        <div class="step-title">Open VS Code</div>
+        <p>Launch VS Code. If you installed it with the Vibe Coding Stack script, you can open it from the terminal:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">code</span></pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="3.2">
+        <div class="step-title">Sign in to GitHub from VS Code</div>
+        <p>VS Code may prompt you to sign in automatically. If not:</p>
+        <div class="callout callout-info">
+          <strong>How to sign in</strong>
+          1. Click the <strong style="color:var(--text)">Accounts</strong> icon in the bottom-left of the sidebar (person icon)<br>
+          2. Click <strong style="color:var(--text)">Sign in with GitHub</strong><br>
+          3. Your browser opens — authorize VS Code to access your GitHub account<br>
+          4. You'll be redirected back to VS Code. Done!
+        </div>
+      </div>
+
+      <div class="step" data-n="3.3">
+        <div class="step-title">Install the GitHub Pull Requests extension (optional)</div>
+        <p>For a richer experience, install the official GitHub extension:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">code</span> --install-extension GitHub.vscode-pull-request-github</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04 YOUR FIRST REPO -->
+  <section class="section" id="first-repo">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Your First Repo</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">A "repo" (repository) is just a project folder that Git tracks. Let's create one on GitHub and bring it to your computer.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="4.1">
+        <div class="step-title">Create a repo on GitHub</div>
+        <div class="callout callout-info">
+          <strong>Step by step</strong>
+          1. Go to <strong style="color:var(--text)">github.com</strong> and click the <strong style="color:var(--text)">+</strong> button (top-right) → <strong style="color:var(--text)">New repository</strong><br>
+          2. Name it something simple like <code style="color:var(--accent2)">my-first-project</code><br>
+          3. Choose <strong style="color:var(--text)">Public</strong> or <strong style="color:var(--text)">Private</strong> (either is fine)<br>
+          4. Check <strong style="color:var(--text)">"Add a README file"</strong><br>
+          5. Click <strong style="color:var(--text)">Create repository</strong>
+        </div>
+      </div>
+
+      <div class="step" data-n="4.2">
+        <div class="step-title">Clone it to your computer</div>
+        <p>On your repo page, click the green <strong style="color:var(--text)">Code</strong> button, select the <strong style="color:var(--text)">SSH</strong> tab, and copy the URL. Then clone it:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">git</span> clone git@github.com:<span class="str">your-username/my-first-project</span>.git</pre>
+        </div>
+        <p>This creates a folder called <code style="color:var(--accent2)">my-first-project</code> with your repo inside it.</p>
+      </div>
+
+      <div class="step" data-n="4.3">
+        <div class="step-title">Open it in VS Code</div>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="fn">code</span> my-first-project</pre>
+        </div>
+        <p>VS Code opens with your project. You'll see the <code style="color:var(--accent2)">README.md</code> file in the file explorer on the left.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 05 COMMIT & PUSH -->
+  <section class="section" id="commit-push">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Commit & Push</h2>
+    </div>
+
+    <p style="color:var(--muted); margin-bottom:28px; font-size:13px; max-width:600px;">Now let's make a change, save it with Git (commit), and send it to GitHub (push). This is the core workflow you'll use every day.</p>
+
+    <div class="steps">
+
+      <div class="step" data-n="5.1">
+        <div class="step-title">Make a change</div>
+        <p>Open <code style="color:var(--accent2)">README.md</code> in VS Code and add a line — anything you want. For example:</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>README.md</span>
+          </div>
+          <pre># my-first-project
+
+Hello world! This is my first change.</pre>
+        </div>
+        <p>Save the file (<kbd>Ctrl+S</kbd> on Windows, <kbd>⌘+S</kbd> on Mac).</p>
+      </div>
+
+      <div class="step" data-n="5.2">
+        <div class="step-title">Stage, commit, and push — VS Code method</div>
+        <p>The easiest way is right inside VS Code:</p>
+        <div class="callout callout-info">
+          <strong>Using the VS Code sidebar</strong>
+          1. Click the <strong style="color:var(--text)">Source Control</strong> icon in the left sidebar (looks like a branch)<br>
+          2. You'll see your changed file listed. Click the <strong style="color:var(--text)">+</strong> next to it to stage it<br>
+          3. Type a message in the text box at the top, like <code style="color:var(--accent2)">Add greeting to README</code><br>
+          4. Click the <strong style="color:var(--text)">Commit</strong> button (checkmark)<br>
+          5. Click the <strong style="color:var(--text)">Sync Changes</strong> button (or the cloud icon) to push to GitHub
+        </div>
+      </div>
+
+      <div class="step" data-n="5.3">
+        <div class="step-title">Stage, commit, and push — Terminal method</div>
+        <p>You can also do everything from the terminal. Open the terminal in VS Code (<kbd>Ctrl+`</kbd> or <kbd>⌘+`</kbd>):</p>
+        <div class="code-block">
+          <div class="code-bar">
+            <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+            <span>Terminal (inside VS Code)</span>
+            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+          </div>
+          <pre><span class="cm"># Stage the changed file</span>
+<span class="fn">git</span> add README.md
+
+<span class="cm"># Commit with a message</span>
+<span class="fn">git</span> commit -m <span class="str">"Add greeting to README"</span>
+
+<span class="cm"># Push to GitHub</span>
+<span class="fn">git</span> push</pre>
+        </div>
+      </div>
+
+      <div class="step" data-n="5.4">
+        <div class="step-title">Verify on GitHub</div>
+        <p>Go to your repo on <strong style="color:var(--text)">github.com</strong> and refresh the page. You should see your changes in the README! Your code is now backed up on the internet.</p>
+        <div class="callout callout-tip">
+          <strong>You did it!</strong>
+          You've just completed the core Git workflow: change → stage → commit → push. This is the same process developers use every day, whether they're working alone or on a team of hundreds.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>Vibe Coding Stack — <span>GitHub Setup Guide</span></span>
+    <span style="color:var(--muted)">You're connected 🚀</span>
+  </footer>
+
+</main>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
